@@ -49,7 +49,7 @@ const LandingPage = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => (
   <Layout>
     <Head>
-      <title>Aleca Travel | Encuentra tu próximo viaje</title>
+      <title>Aleca Travel | Viajar es evolucionar </title>
       <meta
         name="description"
         content="Descubre destinos destacados y encuentra hoteles para planear tu próximo viaje."
@@ -59,17 +59,18 @@ const LandingPage = ({
       <Hero />
       <FeaturedDestinations destinations={destinations} />
       <PopularHotels hotels={hotels} />
-      <section className="rounded-3xl bg-slate-900 px-6 py-12 text-center text-white sm:px-12">
+      <section className="rounded-3xl bg-slate-900 px-6 py-12 text-center text-white sm:px-12 shadow-2xl shadow-black/20 ring-1 ring-white/50
+            bg-[linear-gradient(to_bottom,#2bc9fb_0%,#0ea5e9_60%,#0369a1_100%)]">
         <h2 className="text-2xl font-bold sm:text-3xl">
           ¿Buscas algo más específico?
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-slate-300">
+        <p className="mx-auto mt-3 max-w-xl text-slate-100">
           Explora el catálogo completo y encuentra la estancia ideal para tu
           próximo viaje.
         </p>
         <Link
           href="/search"
-          className="mt-6 inline-flex rounded-lg bg-white px-5 py-3 font-semibold text-slate-900 transition hover:bg-slate-100"
+          className="mt-6 inline-flex rounded-lg bg-cyan-400 px-5 py-3 font-semibold text-mist-50 transition hover:bg-cyan-600"
         >
           Explorar todos los hoteles
         </Link>

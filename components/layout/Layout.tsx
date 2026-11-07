@@ -1,12 +1,14 @@
 import Header from './Header'
+import Footer from './Footer'
 
 type Props = {
   children: React.ReactNode
 }
 const Layout: React.FC<Props> = (props) => (
-  <div>
+  <div className="min-h-screen flex flex-col bg-[linear-gradient(to_bottom,#0284c7_0%,#38bdf8_55%,#2bc9fb_100%)]">
     <Header />
-    <div className="layout">{props.children}</div>
+    <div className="layout flex-1">{props.children}</div>
+    <Footer />
     <style jsx global>{`
       html {
         box-sizing: border-box;
@@ -25,7 +27,6 @@ const Layout: React.FC<Props> = (props) => (
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
           Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
           'Segoe UI Symbol';
-        background: rgba(0, 0, 0, 0.05);
       }
 
       input,
