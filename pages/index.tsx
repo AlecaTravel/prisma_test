@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { SchemaLink } from '@apollo/client/link/schema';
 import Head from 'next/head';
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import Layout from '../components/layout/Layout';
 import { FeaturedDestinations } from '../features/landing/components/FeaturedDestinations';
@@ -46,7 +46,7 @@ const LANDING_CONTENT_QUERY = graphql(`
 const LandingPage = ({
   destinations,
   hotels,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => (
+}: InferGetStaticPropsType<typeof getStaticProps>) => (
   <Layout>
     <Head>
       <title>Aleca Travel | Viajar es evolucionar </title>
@@ -79,7 +79,7 @@ const LandingPage = ({
   </Layout>
 );
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const client = new ApolloClient({
     ssrMode: true,
     link: new SchemaLink({
@@ -101,6 +101,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
         destinations: data.destinations,
         hotels: data.hotels.edges.map(({ node }) => node),
       },
+      revalidate: 60,
     };
   } finally {
     await client.stop();
