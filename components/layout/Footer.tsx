@@ -18,7 +18,7 @@ const Footer = () => {
             Aleca Travel
           </a>
         </Link>
-        <Link href="" legacyBehavior>
+        <Link href="">
           <a > +52 3313353452 </a>
         </Link>
         <Link href=""legacyBehavior>
