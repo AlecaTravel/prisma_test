@@ -271,7 +271,7 @@ export function SearchBar({
               role="combobox"
               aria-expanded={isOpen}
               aria-autocomplete="list"
-              className="flex h-10 w-full rounded-md border border-sky-400 px-5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
+              className="flex h-10 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
               placeholder="Busca un destino o hotel..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -290,21 +290,21 @@ export function SearchBar({
 
         <input
           type="date"
-          className="flex h-10 w-full md:w-1/4 rounded-md border border-sky-400 px-5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
+          className="flex h-10 w-full md:w-1/4 rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
           value={dates.checkIn}
           onChange={(e) => updateDates({ checkIn: e.target.value })}
         />
 
         <input
           type="date"
-          className="flex h-10 w-full md:w-1/4 rounded-md border border-sky-400 px-5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
+          className="flex h-10 w-full md:w-1/4 rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
           value={dates.checkOut}
           onChange={(e) => updateDates({ checkOut: e.target.value })}
         />
 
         <button
           type="submit"
-          className="inline-flex h-10 items-center justify-center rounded-md bg-cyan-500 px-6 py-2 text-sm font-medium text-white hover:bg-cyan-700 transition-colors"
+          className="inline-flex h-10 items-center justify-center rounded-md bg-slate-900 px-6 py-2 text-sm font-medium text-white hover:bg-slate-800 transition-colors"
         >
           Buscar
         </button>

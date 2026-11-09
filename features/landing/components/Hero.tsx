@@ -15,18 +15,17 @@ export function Hero() {
   };
 
   return (
-    <section className="overflow-hidden rounded-3xl p-6 :px-10 sm:py-16 lg:px-16
-            shadow-2xl shadow-black/20 ring-1 ring-white/50
-            bg-[linear-gradient(to_bottom,#2bc9fb_0%,#0ea5e9_60%,#0369a1_100%)]">
+    <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 px-6 py-12 text-white sm:px-10 sm:py-16 lg:px-16">
       <div className="mx-auto max-w-3xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-mist-100">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">
           Aleca Travel
         </p>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight text-mist-50 sm:text-5xl lg:text-6xl">
-          Encuentra aqui tu lugar favorito
+        <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+          Encuentra tu próximo lugar favorito
         </h1>
         <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-200">
-          Descubre destinos únicos y compara hoteles inventa tu viaje a medida.
+          Descubre destinos únicos y compara hoteles para planear un viaje a tu
+          medida.
         </p>
         <div className="mt-8 rounded-2xl bg-white p-3 text-slate-950 shadow-xl">
           <SearchBar onSearchSubmit={handleSearch} />
