@@ -13,19 +13,19 @@ const Footer = () => {
   return (
     <nav aria-label="Pie de página">
       <div className="left">
-        <Link href="/" legacyBehavior>
-          <a className="bold" data-active={isActive("/")}>
+        <Link href="" legacyBehavior>
+          <a className="bold" >
             Aleca Travel
           </a>
         </Link>
-        <Link href="/search" legacyBehavior>
-          <a data-active={isActive("/search")}> +52 3313353452 </a>
+        <Link href="">
+          <a > +52 3313353452 </a>
         </Link>
-        <Link href="/whoweare" legacyBehavior>
-          <a data-active={isActive("/whoweare")}>@aleca_travel</a>
+        <Link href=""legacyBehavior>
+          <a >@aleca_travel</a>
         </Link>
-        <Link href="/contactus" legacyBehavior>
-          <a data-active={isActive("/contactus")}>alecago.aventuras@gmail.com</a>
+        <Link href="" legacyBehavior>
+          <a >alecago.aventuras@gmail.com</a>
         </Link>
       </div>
       <div className="right text-mist-50">
