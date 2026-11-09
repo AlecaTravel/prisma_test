@@ -24,7 +24,7 @@ const Header = () => {
         className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 sm:px-6 lg:px-8"
       >
         <Link href="/" className="flex items-center gap-2" aria-label="Aleca Travel, inicio">
-          <Image src="/Logo.png" alt="" width={52} height={52} className="h-11 w-11 object-contain" />
+          <Image src="/Logo.png" alt="" width={66} height={66} className="h-11 w-11 object-contain" />
           <span className="text-lg font-semibold tracking-tight text-white">Aleca Travel</span>
         </Link>
 

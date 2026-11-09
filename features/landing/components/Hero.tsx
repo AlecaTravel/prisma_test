@@ -7,13 +7,14 @@ export function Hero() {
       <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.75fr]">
         <div className="relative z-10">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-100">
-            Aleca Travel · Viajes con intención
+            Aleca Travel · Viajar es Evolucionar
           </p>
           <h1 className="mt-5 max-w-2xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-            El mundo se disfruta mejor cuando el viaje ya está pensado.
+            El mundo se difruta , un viaje a la vez,
+            Tu proximo destino esta con nosotros.
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-8 text-sky-50/90">
-            Escapadas seleccionadas, paquetes claros y acompañamiento cercano
+            Paquetes claros y acompañamiento cercano
             desde que empiezas a imaginarlo hasta que vuelves a casa.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
