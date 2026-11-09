@@ -8,7 +8,7 @@ export function PopularHotels({ hotels }: PopularHotelsProps) {
   return (
     <section aria-labelledby="popular-hotels-title">
       <div className="mb-6">
-        <p className="text-sm font-semibold uppercase tracking-wider text-sky-700">
+        <p className="text-sm font-semibold uppercase tracking-wider text-brand-700">
           Alojamientos que inspiran
         </p>
         <h2

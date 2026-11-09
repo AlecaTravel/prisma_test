@@ -1,109 +1,94 @@
-import Link from "next/link"
-import { useRouter } from "next/router"
-import { signOut } from "next-auth/react"
-import { useMe } from "../../features/auth/useMe"
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { signOut } from 'next-auth/react';
+import { useMe } from '../../features/auth/useMe';
 
 const Header = () => {
-  const router = useRouter()
-  const { user, status } = useMe()
+  const router = useRouter();
+  const { user, status } = useMe();
 
   function isActive(pathname: string) {
-    return router.pathname === pathname
+    return router.pathname === pathname;
   }
 
+  const navClass = (pathname: string) =>
+    `rounded-full px-3 py-2 text-sm font-medium transition hover:bg-white/10 hover:text-white ${
+      isActive(pathname) ? 'bg-white/10 text-white' : 'text-sky-100'
+    }`;
+
   return (
-    <nav aria-label="Navegación principal">
-      <div className="left">
-        <Link href="/" legacyBehavior>
-          <a className="bold" data-active={isActive("/")}>
-            Catálogo
-          </a>
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-brand-900/95 text-white shadow-sm shadow-sky-950/10 backdrop-blur">
+      <nav
+        aria-label="Navegación principal"
+        className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 sm:px-6 lg:px-8"
+      >
+        <Link href="/" className="flex items-center gap-2" aria-label="Aleca Travel, inicio">
+          <Image src="/Logo.png" alt="" width={52} height={52} className="h-11 w-11 object-contain" />
+          <span className="text-lg font-semibold tracking-tight text-white">Aleca Travel</span>
         </Link>
-        <Link href="/search" legacyBehavior>
-          <a data-active={isActive("/search")}>Buscar</a>
-        </Link>
-      </div>
-      <div className="right">
-        {status === "authenticated" ? (
-          <>
-            <span>{user?.name ?? user?.email}</span>
-            <Link href="/mis-reservas" legacyBehavior>
-              <a data-active={isActive("/mis-reservas")}>Mis reservas</a>
-            </Link>
-            {(user?.role === "ADMIN" || user?.role === "AGENT") && (
-              <Link href="/admin" legacyBehavior>
-                <a data-active={isActive("/admin")}>Administración</a>
+
+        <div className="flex flex-1 flex-wrap items-center gap-1">
+          <Link href="/#paquetes" className={navClass('/')}>
+            Paquetes
+          </Link>
+          <Link href="/search" className={navClass('/search')}>
+            Hospedajes
+          </Link>
+          <Link href="/about" className={navClass('/about')}>
+            Nosotros
+          </Link>
+          <Link href="/contact" className={navClass('/contact')}>
+            Contáctanos
+          </Link>
+        </div>
+
+        <div className="ml-auto flex flex-wrap items-center gap-2 text-sm">
+          {status === 'authenticated' ? (
+            <>
+              <span className="hidden text-sky-100 sm:inline">{user?.name ?? user?.email}</span>
+              <Link href="/mis-reservas" className={navClass('/mis-reservas')}>
+                Mis reservas
               </Link>
-            )}
-            {user?.role === "ADMIN" && (
-              <Link href="/create" legacyBehavior>
-                <a data-active={isActive("/create")}>+ Nuevo Hotel</a>
+              {(user?.role === 'ADMIN' || user?.role === 'AGENT') && (
+                <Link href="/admin" className={navClass('/admin')}>
+                  Administración
+                </Link>
+              )}
+              {user?.role === 'ADMIN' && (
+                <Link href="/create" className={navClass('/create')}>
+                  + Nuevo hotel
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={() => void signOut({ redirectTo: '/' })}
+                className="rounded-full border border-white/40 px-3 py-2 font-medium text-white transition hover:bg-white hover:text-brand-900"
+              >
+                Cerrar sesión
+              </button>
+            </>
+          ) : status === 'unauthenticated' ? (
+            <>
+              <Link href="/login" className={navClass('/login')}>
+                Iniciar sesión
               </Link>
-            )}
-            <button type="button" onClick={() => void signOut({ redirectTo: "/" })}>
-              Cerrar sesión
-            </button>
-          </>
-        ) : status === "unauthenticated" ? (
-          <>
-            <Link href="/login" legacyBehavior>
-              <a data-active={isActive("/login")}>Iniciar sesión</a>
-            </Link>
-            <Link href="/signup" legacyBehavior>
-              <a data-active={isActive("/signup")}>Crear cuenta</a>
-            </Link>
-          </>
-        ) : (
-          <span aria-live="polite">Cargando sesión…</span>
-        )}
-      </div>
-      <style jsx>{`
-        nav {
-          display: flex;
-          padding: 2rem;
-          align-items: center;
-        }
-
-        .bold {
-          font-weight: bold;
-        }
-
-        a {
-          text-decoration: none;
-          color: #000;
-          display: inline-block;
-        }
-
-        .left a[data-active="true"] {
-          color: gray;
-        }
-
-        a + a {
-          margin-left: 1rem;
-        }
-
-        .right {
-          margin-left: auto;
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-        }
-
-        .right a {
-          border: 1px solid black;
-          padding: 0.5rem 1rem;
-          border-radius: 3px;
-        }
-
-        button {
-          background: white;
-          border: 1px solid black;
-          padding: 0.5rem 1rem;
-          border-radius: 3px;
-        }
-      `}</style>
-    </nav>
+              <Link
+                href="/signup"
+                className="rounded-full bg-white px-4 py-2 font-semibold text-brand-900 transition hover:bg-brand-50"
+              >
+                Crear cuenta
+              </Link>
+            </>
+          ) : (
+            <span aria-live="polite" className="sr-only">
+              Cargando sesión…
+            </span>
+          )}
+        </div>
+      </nav>
+    </header>
   );
-}
+};
 
-export default Header
+export default Header;

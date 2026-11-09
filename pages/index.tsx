@@ -5,6 +5,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Link from 'next/link';
 import Layout from '../components/layout/Layout';
 import { FeaturedDestinations } from '../features/landing/components/FeaturedDestinations';
+import { FeaturedPackages } from '../features/landing/components/FeaturedPackages';
 import { Hero } from '../features/landing/components/Hero';
 import { PopularHotels } from '../features/landing/components/PopularHotels';
 import { graphql } from '../gql';
@@ -55,23 +56,28 @@ const LandingPage = ({
         content="Descubre destinos destacados y encuentra hoteles para planear tu próximo viaje."
       />
     </Head>
-    <main className="mx-auto max-w-7xl space-y-20 px-4 py-8 sm:px-6 lg:px-8">
+    <main className="mx-auto max-w-7xl space-y-20 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       <Hero />
-      <FeaturedDestinations destinations={destinations} />
-      <PopularHotels hotels={hotels} />
-      <section className="rounded-3xl bg-slate-900 px-6 py-12 text-center text-white sm:px-12">
+      <FeaturedPackages />
+      <div id="destinos" className="scroll-mt-28">
+        <FeaturedDestinations destinations={destinations} />
+      </div>
+      <div id="hoteles" className="scroll-mt-28">
+        <PopularHotels hotels={hotels} />
+      </div>
+      <section className="brand-gradient rounded-3xl px-6 py-12 text-center text-white shadow-xl shadow-sky-950/10 sm:px-12">
         <h2 className="text-2xl font-bold sm:text-3xl">
-          ¿Buscas algo más específico?
+          ¿Te ayudamos a elegir tu próximo viaje?
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-slate-300">
-          Explora el catálogo completo y encuentra la estancia ideal para tu
-          próximo viaje.
+        <p className="mx-auto mt-3 max-w-xl text-brand-50">
+          Cuéntanos qué tienes en mente y nuestro equipo te acompaña a encontrar
+          la opción ideal.
         </p>
         <Link
-          href="/search"
-          className="mt-6 inline-flex rounded-lg bg-white px-5 py-3 font-semibold text-slate-900 transition hover:bg-slate-100"
+          href="/contact"
+          className="mt-6 inline-flex rounded-lg bg-white px-5 py-3 font-semibold text-brand-900 transition hover:bg-brand-50"
         >
-          Explorar todos los hoteles
+          Contáctanos
         </Link>
       </section>
     </main>

@@ -5,6 +5,7 @@ import '@testing-library/jest-dom/vitest';
 import type { ComponentProps, ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DestinationCard } from '../features/landing/components/DestinationCard';
+import { FeaturedPackages } from '../features/landing/components/FeaturedPackages';
 import { PopularHotelCard } from '../features/landing/components/PopularHotelCard';
 
 vi.mock('next/image', () => ({
@@ -59,6 +60,17 @@ const hotel = {
 };
 
 describe('landing cards', () => {
+  it('renders fixed travel packages with their advertised prices and WhatsApp links', () => {
+    render(<FeaturedPackages />);
+
+    expect(screen.getByRole('heading', { name: 'Paquetes destacados' })).toBeInTheDocument();
+    expect(screen.getByText('$38,559 MXN')).toBeInTheDocument();
+    expect(screen.getByText('$47,990 MXN')).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Consultar por WhatsApp el paquete Costa Rica Aventurero' }),
+    ).toHaveAttribute('href', expect.stringContaining('wa.me/523313353452'));
+  });
+
   it('renders destination name, country, image, and destination search link', () => {
     render(<DestinationCard destination={destination} />);
 

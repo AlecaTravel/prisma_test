@@ -1,1 +1,36 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand-50: #ecfeff;
+  --color-brand-100: #cffafe;
+  --color-brand-300: #67e8f9;
+  --color-brand-500: #06b6d4;
+  --color-brand-600: #0891b2;
+  --color-brand-700: #0e7490;
+  --color-brand-900: #164e63;
+}
+
+:root {
+  color-scheme: light;
+  --brand-gradient: linear-gradient(125deg, #0c4a6e 0%, #0369a1 55%, #0e7490 100%);
+}
+
+body {
+  background-color: #f2faff;
+  background-image:
+    radial-gradient(ellipse at 10% 12%, rgb(56 189 248 / 12%), transparent 32rem),
+    radial-gradient(ellipse at 92% 38%, rgb(14 165 233 / 9%), transparent 30rem),
+    radial-gradient(ellipse at 35% 90%, rgb(103 232 249 / 10%), transparent 34rem);
+  color: #0f172a;
+}
+
+.brand-gradient {
+  background: var(--brand-gradient);
+}
+
+.hero-organic {
+  background:
+    radial-gradient(ellipse at 85% 12%, rgb(103 232 249 / 24%), transparent 35%),
+    radial-gradient(ellipse at 5% 90%, rgb(14 165 233 / 24%), transparent 38%),
+    linear-gradient(125deg, #0c4a6e 0%, #0369a1 55%, #0e7490 100%);
+}

@@ -9,7 +9,7 @@ export function FeaturedDestinations({ destinations }: FeaturedDestinationsProps
     <section aria-labelledby="featured-destinations-title">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-sky-700">
+          <p className="text-sm font-semibold uppercase tracking-wider text-brand-700">
             Inspiración para viajar
           </p>
           <h2
