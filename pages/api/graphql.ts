@@ -2,6 +2,8 @@ import { createYoga } from 'graphql-yoga';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { schema } from '../../server/schema';
 import { createContext } from '../../server/context';
+import { getGraphQLSecurityPlugins } from '../../server/graphql-security';
+import { createGraphQLRateLimitPlugin } from '../../server/graphql-rate-limit';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -10,6 +12,12 @@ export default createYoga<{ req: NextApiRequest; res: NextApiResponse }>({
   graphqlEndpoint: '/api/graphql',
   // GraphiQL (el playground) solo en desarrollo
   graphiql: !isProd,
+  plugins: [
+    ...getGraphQLSecurityPlugins(isProd),
+    ...(isProd ? [createGraphQLRateLimitPlugin()] : []),
+  ],
+  maxRequestBodySize: 1_000_000,
+  batching: false,
   // En producción los errores inesperados se enmascaran: el cliente ve un mensaje
   // genérico y no detalles internos (SQL, rutas, stack traces).
   maskedErrors: { isDev: !isProd },

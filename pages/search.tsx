@@ -17,6 +17,7 @@ import {
 } from '../features/search/filter-state';
 import { graphql } from '../gql';
 import { getDefaultStayDates, isValidStayDates, type StayDates } from '../lib/stay-dates';
+import Layout from '../components/layout/Layout';
 
 const SEARCH_HOTELS_QUERY = graphql(`
   query SearchHotelsWithFacets(
@@ -91,7 +92,7 @@ function withSearchParams(state: SearchFilterState): string {
   return params.size > 0 ? `/search?${params.toString()}` : '/search';
 }
 
-export default function SearchPage() {
+function SearchCatalogPage() {
   const router = useRouter();
   const { selection, clear, setDates } = useBooking();
   const [isHotelSlugSearch, setIsHotelSlugSearch] = useState(false);
@@ -257,7 +258,6 @@ export default function SearchPage() {
   const facets = facetsData?.hotelFacets;
   const chips = activeFilterChips(searchState);
   const pageInfo = searchData?.hotels.pageInfo;
-  const edges = searchData?.hotels.edges ?? [];
 
   const movePage = (direction: 'next' | 'previous') => {
     const next = {
@@ -271,7 +271,7 @@ export default function SearchPage() {
   return (
     <div className="min-h-screen bg-slate-50 p-4 font-sans sm:p-8">
       <Head>
-        <title>Buscar hoteles | Core</title>
+        <title>Buscar hoteles | Aleca Travel</title>
       </Head>
 
       <div className="mx-auto max-w-7xl space-y-6">
@@ -469,4 +469,63 @@ export default function SearchPage() {
       </div>
     </div>
   );
+}
+
+function CatalogComingSoon() {
+  return (
+    <Layout>
+      <Head>
+        <title>Hospedajes próximamente — Aleca Travel</title>
+        <meta
+          name="description"
+          content="Estamos preparando nuestro catálogo de hospedajes. Contacta al equipo de Aleca Travel para recibir ayuda."
+        />
+      </Head>
+      <main className="mx-auto flex min-h-[55vh] max-w-3xl items-center px-4 py-16 sm:px-6">
+        <section className="w-full rounded-3xl border border-sky-100 bg-white p-8 text-center shadow-xl shadow-sky-900/5 sm:p-12">
+          <span
+            aria-hidden="true"
+            className="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-full bg-sky-100 text-3xl"
+          >
+            ✨
+          </span>
+          <p className="mt-5 text-sm font-semibold uppercase tracking-[0.16em] text-sky-700">
+            Estamos preparando algo especial
+          </p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-sky-950">
+            El catálogo de hospedajes llegará pronto
+          </h1>
+          <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-600">
+            Mientras terminamos de validar las opciones, nuestro equipo puede
+            ayudarte personalmente. También puedes explorar los paquetes de
+            viaje disponibles.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/contact"
+              className="rounded-full bg-sky-700 px-5 py-3 font-semibold text-white transition hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700"
+            >
+              Hablar con Aleca
+            </Link>
+            <Link
+              href="/#paquetes"
+              className="rounded-full border border-sky-200 bg-sky-50 px-5 py-3 font-semibold text-sky-900 transition hover:bg-sky-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700"
+            >
+              Ver paquetes disponibles
+            </Link>
+          </div>
+        </section>
+      </main>
+    </Layout>
+  );
+}
+
+export default function SearchPage() {
+  return process.env.NEXT_PUBLIC_CATALOG_ENABLED === 'true'
+    ? (
+      <SearchCatalogPage />
+    )
+    : (
+      <CatalogComingSoon />
+    );
 }

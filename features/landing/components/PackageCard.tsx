@@ -2,6 +2,7 @@ import Image from 'next/image';
 
 export interface FixedPackage {
   name: string;
+  category: 'Aventura' | 'Europa' | 'Playa' | 'Ciudad';
   destination: string;
   departure: string;
   duration: string;
@@ -21,15 +22,18 @@ function whatsappLink(packageName: string) {
 
 export function PackageCard({ travelPackage }: PackageCardProps) {
   return (
-    <article className="group overflow-hidden rounded-3xl border border-sky-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-sky-950/10">
+    <article className="group overflow-hidden rounded-3xl border border-sky-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-sky-950/10 motion-reduce:transform-none motion-reduce:transition-none">
       <div className="relative aspect-[4/5] overflow-hidden bg-sky-50">
         <Image
           src={travelPackage.image}
           alt={`Paquete ${travelPackage.name} de Aleca Travel`}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition duration-500 group-hover:scale-[1.025]"
+          className="object-cover transition duration-500 group-hover:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
         />
+        <span className="absolute left-4 top-4 rounded-full border border-white/70 bg-white/90 px-3 py-1 text-xs font-semibold text-sky-800 shadow-sm backdrop-blur">
+          {travelPackage.category}
+        </span>
       </div>
       <div className="p-5">
         <p className="text-sm font-medium text-brand-700">{travelPackage.destination}</p>
@@ -51,7 +55,7 @@ export function PackageCard({ travelPackage }: PackageCardProps) {
             href={whatsappLink(travelPackage.name)}
             target="_blank"
             rel="noreferrer"
-            className="shrink-0 rounded-full bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+            className="shrink-0 rounded-full bg-sky-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700"
             aria-label={`Consultar por WhatsApp el paquete ${travelPackage.name}`}
           >
             Consultar

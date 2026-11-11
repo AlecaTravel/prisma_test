@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
 // Codegen lee DOS cosas y genera los tipos del CLIENTE:
@@ -11,7 +12,13 @@ const config: CodegenConfig = {
     './gql/': {
       preset: 'client',
       // Sin "fragment masking": más simple para empezar (los componentes ven todos los campos)
-      presetConfig: { fragmentMasking: false },
+      presetConfig: {
+        fragmentMasking: false,
+        persistedDocuments: {
+          hashAlgorithm: (operation: string) =>
+            createHash('sha256').update(operation).digest('hex'),
+        },
+      },
       config: {
         useTypeImports: true,
         enumsAsTypes: true,

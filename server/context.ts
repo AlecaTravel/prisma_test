@@ -1,7 +1,7 @@
 import type { NextApiRequest } from 'next';
 import type { NextApiResponse } from 'next';
 import prisma from '../lib/prisma';
-import { auth } from './auth';
+import { getRequestSession } from './request-session';
 import { sessionUserFromSession, type SessionUser } from './session-user';
 
 export type { SessionUser } from './session-user';
@@ -28,7 +28,7 @@ export async function createContext(
   req: NextApiRequest,
   res: NextApiResponse,
 ): Promise<Context> {
-  const session = await auth(req, res);
+  const session = await getRequestSession(req, res);
   return {
     prisma,
     user: sessionUserFromSession(session),

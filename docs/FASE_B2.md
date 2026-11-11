@@ -10,6 +10,7 @@
 - `ProviderRegistry` valida códigos únicos; `ProviderRouter` aplica límites, circuit breaker y cache cuando corresponde.
 - La disponibilidad de `LOCAL` siempre consulta PostgreSQL. No se cachea disponibilidad local para evitar vender inventario obsoleto. Para proveedores remotos se configura TTL de 5 minutos para disponibilidad y 1 hora para tarifas.
 - El límite es de 10 operaciones por segundo y 10 cotizaciones por minuto por usuario/identidad, mediante `rate-limiter-flexible`. El circuit breaker se abre tras 5 fallos reintentables y expira a los 30 segundos.
+- Estos límites son específicos para operaciones de provider; el endpoint GraphQL añade límites separados por IP y usuario (300/IP/minuto y 120/usuario/minuto) en [`agent/security-roadmap.md`](../agent/security-roadmap.md). Ambos usan Redis compartido, pero no comparten buckets.
 - BullMQ proporciona `provider.book`, `provider.cancel`, `provider.syncCatalog` y `provider.refreshPriceFrom`, con identificadores deterministas derivados de la clave de idempotencia, hasta 5 intentos y backoff exponencial.
 - El worker valida los payloads y recibe handlers explícitos para cada tipo de trabajo. No se configura un worker de negocio por defecto: aún no existen proveedores externos que ejecuten esas operaciones.
 - La cola/worker se probaron con Upstash real: encolado, deduplicación, ejecución, un fallo temporal seguido de retry y limpieza de una cola temporal aislada.
@@ -41,6 +42,7 @@ El comando de comprobación hace `PING`, comprueba escritura/lectura del cache y
 ## Límites y riesgos conocidos
 
 - La conexión TCP/TLS de Upstash se verificó localmente con `PING`, lectura/escritura de cache, TTL, operación Lua del circuit breaker, límites distribuidos y ciclo encolado/worker/retry de BullMQ. No se probó carga ni concurrencia a escala.
+- La verificación adicional `npm run security:verify-rate-limit` ejercita los buckets GraphQL con claves aleatorias y los elimina al finalizar; no sustituye una prueba de carga ni el monitoreo de 429 en producción.
 - La cola no está conectada a `createBooking`: la reserva local ya confirma inventario en una transacción síncrona. Encolar el mismo efecto produciría reservas o decrementos duplicados. La integración de `provider.book` debe ocurrir cuando exista una operación remota diferenciada y su contrato de idempotencia.
 - `LocalProviderClient.cancelBooking` rechaza la operación. La cancelación del inventario propio sigue siendo responsabilidad de la transición administrativa existente; no se devuelve una falsa confirmación de cancelación.
 - No hay clientes externos registrados en el router ni handlers de producción para los jobs. El webhook verifica y delega el evento, pero no actualiza reservas por sí mismo.

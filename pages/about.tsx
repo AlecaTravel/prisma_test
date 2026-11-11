@@ -12,14 +12,14 @@ const AboutPage = () => (
       />
     </Head>
     <main className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:py-20">
-      <section className="hero-organic overflow-hidden rounded-[2rem] px-6 py-12 text-white shadow-xl shadow-sky-950/10 sm:px-12 sm:py-16">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-100">
+      <section className="hero-organic overflow-hidden rounded-[2rem] px-6 py-12 text-sky-950 shadow-xl shadow-sky-950/10 sm:px-12 sm:py-16">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">
           Sobre nosotros
         </p>
         <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
           Creamos viajes que se sienten tuyos.
         </h1>
-        <p className="mt-5 max-w-2xl text-lg leading-8 text-sky-50/90">
+        <p className="mt-5 max-w-2xl text-lg leading-8 text-sky-900/80">
           En Aleca Travel creemos que cada aventura comienza con una buena
           conversación. Te ayudamos a encontrar experiencias que conecten con
           tus ganas de descubrir, descansar y compartir.

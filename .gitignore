@@ -15,6 +15,9 @@ src/generated/
 # db
 *.db*
 
+#agent
+/agent/*
+!/agent/*.md
 
 # testing
 /coverage

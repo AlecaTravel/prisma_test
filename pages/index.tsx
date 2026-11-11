@@ -1,115 +1,76 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { SchemaLink } from '@apollo/client/link/schema';
 import Head from 'next/head';
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Link from 'next/link';
 import Layout from '../components/layout/Layout';
-import { FeaturedDestinations } from '../features/landing/components/FeaturedDestinations';
 import { FeaturedPackages } from '../features/landing/components/FeaturedPackages';
 import { Hero } from '../features/landing/components/Hero';
-import { PopularHotels } from '../features/landing/components/PopularHotels';
-import { graphql } from '../gql';
-import { prisma } from '../lib/prisma';
-import { schema } from '../server/schema';
 
-const LANDING_CONTENT_QUERY = graphql(`
-  query LandingContent {
-    destinations(featuredOnly: true, take: 6) {
-      id
-      slug
-      name
-      countryCode
-      imageUrl
-      popularityScore
-    }
-    hotels(first: 12, sort: POPULAR) {
-      edges {
-        node {
-          id
-          slug
-          title
-          categoryStars
-          ratingAvg
-          reviewCount
-          priceFrom
-          priceCurrency
-          mainImageUrl
-          destination {
-            name
-            code
-          }
-        }
-      }
-    }
-  }
-`);
+const travelSteps = [
+  {
+    step: '01',
+    title: 'Elige tu experiencia',
+    description: 'Explora paquetes con fechas y precios publicados.',
+  },
+  {
+    step: '02',
+    title: 'Pregunta con confianza',
+    description: 'Nuestro equipo comparte detalles y disponibilidad vigente.',
+  },
+  {
+    step: '03',
+    title: 'Planea con acompañamiento',
+    description: 'Resuelve tus dudas directamente con Aleca Travel.',
+  },
+];
 
-const LandingPage = ({
-  destinations,
-  hotels,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => (
+const LandingPage = () => (
   <Layout>
     <Head>
-      <title>Aleca Travel | Encuentra tu próximo viaje</title>
+      <title>Aleca Travel | Paquetes para tu próximo viaje</title>
       <meta
         name="description"
-        content="Descubre destinos destacados y encuentra hoteles para planear tu próximo viaje."
+        content="Explora paquetes de viaje seleccionados y solicita información personalizada con Aleca Travel."
       />
     </Head>
-    <main className="mx-auto max-w-7xl space-y-20 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <main className="mx-auto max-w-7xl space-y-14 px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
       <Hero />
       <FeaturedPackages />
-      <div id="destinos" className="scroll-mt-28">
-        <FeaturedDestinations destinations={destinations} />
-      </div>
-      <div id="hoteles" className="scroll-mt-28">
-        <PopularHotels hotels={hotels} />
-      </div>
-      <section className="brand-gradient rounded-3xl px-6 py-12 text-center text-white shadow-xl shadow-sky-950/10 sm:px-12">
-        <h2 className="text-2xl font-bold sm:text-3xl">
-          ¿Te ayudamos a elegir tu próximo viaje?
+      <section
+        aria-label="Cómo planear con Aleca Travel"
+        className="grid gap-5 rounded-3xl border border-sky-100 bg-white/80 p-6 shadow-sm sm:grid-cols-3 sm:p-8"
+      >
+        {travelSteps.map(({ step, title, description }) => (
+          <div
+            key={step}
+            className="rounded-2xl p-3 transition-colors hover:bg-sky-50"
+          >
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-sky-100 text-sm font-bold text-sky-800">
+              {step}
+            </span>
+            <h2 className="mt-3 font-semibold text-slate-950">{title}</h2>
+            <p className="mt-1 text-sm leading-6 text-slate-600">{description}</p>
+          </div>
+        ))}
+      </section>
+      <section className="rounded-3xl bg-gradient-to-br from-sky-100 via-blue-50 to-white px-6 py-12 text-center shadow-inner shadow-sky-900/5 sm:px-12">
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-sky-700">
+          ¿Tienes un destino en mente?
+        </p>
+        <h2 className="mt-2 text-2xl font-bold text-sky-950 sm:text-3xl">
+          Hablemos de tu próximo viaje
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-brand-50">
-          Cuéntanos qué tienes en mente y nuestro equipo te acompaña a encontrar
-          la opción ideal.
+        <p className="mx-auto mt-3 max-w-xl text-sky-900/75">
+          Estamos preparando nuestro catálogo de hospedajes. Por ahora, nuestro
+          equipo puede ayudarte personalmente a encontrar una opción.
         </p>
         <Link
           href="/contact"
-          className="mt-6 inline-flex rounded-lg bg-white px-5 py-3 font-semibold text-brand-900 transition hover:bg-brand-50"
+          className="mt-6 inline-flex rounded-full bg-sky-700 px-6 py-3 font-semibold text-white shadow-md shadow-sky-700/20 transition hover:-translate-y-0.5 hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 motion-reduce:transform-none"
         >
-          Contáctanos
+          Hablar con el equipo
         </Link>
       </section>
     </main>
   </Layout>
 );
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const client = new ApolloClient({
-    ssrMode: true,
-    link: new SchemaLink({
-      schema,
-      context: {
-        prisma,
-        user: null,
-        anonymousId: null,
-      },
-    }),
-    cache: new InMemoryCache(),
-  });
-
-  try {
-    const { data } = await client.query({ query: LANDING_CONTENT_QUERY });
-    if (!data) throw new Error('La consulta GraphQL de la landing no devolvió datos.');
-    return {
-      props: {
-        destinations: data.destinations,
-        hotels: data.hotels.edges.map(({ node }) => node),
-      },
-    };
-  } finally {
-    await client.stop();
-  }
-};
 
 export default LandingPage;

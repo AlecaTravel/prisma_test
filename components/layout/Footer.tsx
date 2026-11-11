@@ -1,13 +1,13 @@
 import Link from 'next/link'
 
 const Footer = () => (
-  <footer className="bg-brand-900 px-6 py-8 text-brand-50 sm:px-8">
+  <footer className="border-t border-sky-200 bg-sky-100 px-6 py-8 text-sky-800 sm:px-8">
     <div className="mx-auto flex max-w-7xl flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <Link href="/" className="font-semibold text-white hover:text-brand-100">
+        <Link href="/" className="font-semibold text-sky-950 hover:text-sky-700">
           Aleca Travel
         </Link>
-        <address className="mt-2 not-italic text-sm text-brand-100">
+        <address className="mt-2 not-italic text-sm text-sky-700">
           Av. Rosario Castellanos 2293, Col. Jardines de la Cruz
         </address>
       </div>

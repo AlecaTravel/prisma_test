@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import type { ComponentProps, ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -69,6 +69,20 @@ describe('landing cards', () => {
     expect(
       screen.getByRole('link', { name: 'Consultar por WhatsApp el paquete Costa Rica Aventurero' }),
     ).toHaveAttribute('href', expect.stringContaining('wa.me/523313353452'));
+  });
+
+  it('filters the available packages by travel style', () => {
+    render(<FeaturedPackages />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Playa' }));
+
+    expect(screen.getByRole('heading', { name: 'The Hacienda · Día de las Madres' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'The Hacienda · Independencia' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'RIU Mazatlán · San Valentín' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Costa Rica Aventurero' })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Todos' }));
+    expect(screen.getByRole('heading', { name: 'Costa Rica Aventurero' })).toBeInTheDocument();
   });
 
   it('renders destination name, country, image, and destination search link', () => {

@@ -1,4 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { createPersistedQueryLink } from './persisted-query-link';
 
 // Exportamos una función en lugar de una instancia global estática
 export function createApolloClient() {
@@ -19,9 +20,7 @@ export function createApolloClient() {
 
   return new ApolloClient({
     ssrMode: isServer, 
-    link: new HttpLink({
-      uri: graphqlUri,
-    }),
+    link: createPersistedQueryLink().concat(new HttpLink({ uri: graphqlUri })),
     cache: new InMemoryCache(),
   });
 }

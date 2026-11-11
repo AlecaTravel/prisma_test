@@ -14,15 +14,17 @@
 | 3.G — Métricas | ✅ Completa | Estados y montos confirmados por moneda y fechas |
 | 3.H — Vista del cliente | ✅ Completa | Historial privado con paginación exacta |
 
-## 3.0 — Implementación
+## 3.0 — Presentación pública actual
 
-- La home usa `getStaticProps` con `revalidate: 60`; no carga el inventario completo ni las habitaciones.
-- Consulta seis destinos destacados y doce hoteles populares con una operación GraphQL tipada contra el schema de Pothos.
-- Apollo ejecuta la operación en el proceso servidor con `SchemaLink`. Así se conservan los resolvers y filtros del catálogo sin depender de una petición HTTP a la propia app durante el build o una regeneración ISR.
-- Las tarjetas incluyen imágenes optimizadas con `next/image`, texto alternativo, placeholders cuando falta una imagen y enlaces a búsquedas por destino o slug de hotel.
-- `/search` procesa esos parámetros y muestra resultados filtrados. Los accesos por hotel resuelven el slug de forma exacta.
-- La búsqueda existente se conserva; la nueva landing no utiliza `HotelCard`, que está ligada a la selección de habitaciones y al carrito.
-- Las operaciones se añadieron al codegen del cliente. No cambió el schema del servidor, por lo que esta subfase solo requiere `graphql:codegen`, no `graphql:sync`.
+- La home muestra paquetes fijos y sus imágenes locales de `public/`; no ejecuta consultas Prisma ni presenta los resultados del catálogo.
+- El catálogo de destinos/hoteles y el flujo de búsqueda se conservan. `/search` muestra una pantalla temporal en español, salvo que `NEXT_PUBLIC_CATALOG_ENABLED=true` esté presente durante el build.
+- La bandera solo oculta la experiencia visual. No es autorización ni desactiva el endpoint GraphQL o sus operaciones persistidas.
+- Las tarjetas de paquetes permiten filtrar por estilo de viaje; la selección se hace en cliente sin llamadas al inventario.
+- Al habilitar el catálogo, revisar disponibilidad real, contenido, tipos de habitación y resultados antes de reexponer la búsqueda.
+
+Los siguientes apartados describen la implementación de catálogo conservada para
+su futura reactivación; no son las pantallas públicas que se presentan mientras
+la bandera está desactivada.
 
 ## Ajuste de disponibilidad: estancia predeterminada
 
