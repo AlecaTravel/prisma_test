@@ -75,8 +75,8 @@ export function FeaturedPackages() {
   const filters: PackageFilter[] = ['Todos', 'Aventura', 'Europa', 'Playa', 'Ciudad'];
 
   return (
-    <section id="paquetes" aria-labelledby="featured-packages-title" className="scroll-mt-28">
-      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+    <section id="paquetes" aria-labelledby="featured-packages-title" className="scroll-mt-24 sm:scroll-mt-28">
+      <div className="mb-6 grid gap-3 sm:mb-7 sm:grid-cols-[1fr_auto] sm:items-end sm:gap-6">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">
             Viajes listos para disfrutar
@@ -88,7 +88,7 @@ export function FeaturedPackages() {
             Paquetes destacados
           </h2>
         </div>
-        <p className="max-w-md text-sm leading-6 text-slate-600">
+        <p className="max-w-md text-sm leading-6 text-slate-600 sm:justify-self-end">
           Precios publicados por persona según la base indicada en cada paquete.
           Consulta disponibilidad, restricciones y tarifas vigentes.
         </p>
@@ -106,7 +106,7 @@ export function FeaturedPackages() {
               type="button"
               aria-pressed={isSelected}
               onClick={() => setFilter(category)}
-              className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 ${
+              className={`min-h-10 rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 motion-reduce:transition-none ${
                 isSelected
                   ? 'border-sky-700 bg-sky-700 text-white shadow-sm shadow-sky-700/20'
                   : 'border-sky-200 bg-white/80 text-sky-800 hover:border-sky-400 hover:bg-sky-50'
@@ -117,7 +117,7 @@ export function FeaturedPackages() {
           );
         })}
       </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid items-stretch gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 xl:gap-6">
         {visiblePackages.map((travelPackage) => (
           <PackageCard key={travelPackage.name} travelPackage={travelPackage} />
         ))}

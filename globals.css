@@ -34,3 +34,21 @@ body {
     radial-gradient(ellipse at 5% 90%, rgb(191 219 254 / 80%), transparent 38%),
     linear-gradient(125deg, #eff8ff 0%, #dbeafe 58%, #e0f2fe 100%);
 }
+
+.whatsapp-fab {
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+
+.layout {
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 640px) {
+  .whatsapp-fab {
+    bottom: 1.25rem;
+  }
+
+  .layout {
+    padding-bottom: 0;
+  }
+}

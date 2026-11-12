@@ -3,29 +3,29 @@ import Link from 'next/link';
 
 export function Hero() {
   return (
-    <section className="hero-organic relative isolate overflow-hidden rounded-[2rem] px-6 py-10 text-sky-950 shadow-xl shadow-sky-900/10 sm:px-10 sm:py-14 lg:px-16 lg:py-16">
-      <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.75fr]">
+    <section className="hero-organic relative isolate overflow-hidden rounded-[1.75rem] px-5 py-8 text-sky-950 shadow-xl shadow-sky-900/10 sm:rounded-[2rem] sm:px-10 sm:py-12 lg:px-16 lg:py-14">
+      <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-[1.05fr_0.75fr]">
         <div className="relative z-10">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-sky-700">
             Aleca Travel · Viajar es Evolucionar
           </p>
-          <h1 className="mt-5 max-w-2xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 max-w-2xl text-4xl font-semibold leading-[1.08] tracking-tight sm:mt-5 sm:text-5xl lg:text-6xl">
             Tu próximo viaje empieza con una buena historia.
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-8 text-sky-900/80">
+          <p className="mt-4 max-w-xl text-base leading-7 text-sky-900/80 sm:mt-5 sm:text-lg sm:leading-8">
             Descubre viajes seleccionados y recibe acompañamiento cercano para
             encontrar el que va contigo.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-col gap-3 min-[420px]:flex-row min-[420px]:flex-wrap sm:mt-8">
             <a
               href="#paquetes"
-              className="inline-flex items-center rounded-full bg-sky-700 px-6 py-3 font-semibold text-white shadow-lg shadow-sky-700/20 transition hover:-translate-y-0.5 hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 motion-reduce:transform-none"
+              className="inline-flex min-h-12 items-center justify-center rounded-full bg-sky-700 px-6 py-3 font-semibold text-white shadow-lg shadow-sky-700/20 transition hover:-translate-y-0.5 hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 motion-reduce:transform-none motion-reduce:transition-none"
             >
               Explorar paquetes <span className="ml-2" aria-hidden="true">→</span>
             </a>
             <Link
               href="/about"
-              className="inline-flex items-center rounded-full border border-sky-300 bg-white/70 px-6 py-3 font-semibold text-sky-900 transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700"
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-sky-300 bg-white/70 px-6 py-3 font-semibold text-sky-900 transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 motion-reduce:transition-none"
             >
               Conoce Aleca
             </Link>
@@ -35,7 +35,7 @@ export function Hero() {
           </p>
         </div>
 
-        <div className="relative mx-auto w-full max-w-sm">
+        <div className="relative mx-auto mt-2 w-[min(100%,19rem)] sm:mt-0">
           <div className="absolute -inset-4 rotate-3 rounded-[1.75rem] bg-sky-300/50 blur-sm" />
           <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-white bg-white/80 shadow-2xl shadow-sky-900/10">
             <Image

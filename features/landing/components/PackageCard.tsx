@@ -22,8 +22,8 @@ function whatsappLink(packageName: string) {
 
 export function PackageCard({ travelPackage }: PackageCardProps) {
   return (
-    <article className="group overflow-hidden rounded-3xl border border-sky-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-sky-950/10 motion-reduce:transform-none motion-reduce:transition-none">
-      <div className="relative aspect-[4/5] overflow-hidden bg-sky-50">
+    <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-sky-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-sky-950/10 motion-reduce:transform-none motion-reduce:transition-none">
+      <div className="relative aspect-[4/3] overflow-hidden bg-sky-50">
         <Image
           src={travelPackage.image}
           alt={`Paquete ${travelPackage.name} de Aleca Travel`}
@@ -35,15 +35,15 @@ export function PackageCard({ travelPackage }: PackageCardProps) {
           {travelPackage.category}
         </span>
       </div>
-      <div className="p-5">
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
         <p className="text-sm font-medium text-brand-700">{travelPackage.destination}</p>
-        <h3 className="mt-1 text-xl font-semibold text-slate-950">{travelPackage.name}</h3>
-        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600">
+        <h3 className="mt-1 text-xl font-semibold leading-snug text-slate-950">{travelPackage.name}</h3>
+        <div className="mt-4 flex flex-1 flex-wrap content-start gap-x-4 gap-y-1 text-sm text-slate-600">
           <span>{travelPackage.departure}</span>
           <span aria-hidden="true">·</span>
           <span>{travelPackage.duration}</span>
         </div>
-        <div className="mt-5 flex items-end justify-between gap-3 border-t border-sky-100 pt-4">
+        <div className="mt-5 flex flex-wrap items-end justify-between gap-3 border-t border-sky-100 pt-4">
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Desde</p>
             <p className="mt-0.5 text-2xl font-bold tracking-tight text-sky-900">

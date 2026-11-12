@@ -31,17 +31,17 @@ const LandingPage = () => (
         content="Explora paquetes de viaje seleccionados y solicita información personalizada con Aleca Travel."
       />
     </Head>
-    <main className="mx-auto max-w-7xl space-y-14 px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+    <main className="mx-auto max-w-7xl space-y-16 px-4 py-6 sm:space-y-20 sm:px-6 sm:py-10 lg:px-8 lg:py-14">
       <Hero />
       <FeaturedPackages />
       <section
         aria-label="Cómo planear con Aleca Travel"
-        className="grid gap-5 rounded-3xl border border-sky-100 bg-white/80 p-6 shadow-sm sm:grid-cols-3 sm:p-8"
+        className="grid gap-3 rounded-3xl border border-sky-100 bg-white/85 p-4 shadow-sm sm:grid-cols-3 sm:gap-5 sm:p-8"
       >
         {travelSteps.map(({ step, title, description }) => (
           <div
             key={step}
-            className="rounded-2xl p-3 transition-colors hover:bg-sky-50"
+            className="rounded-2xl p-4 transition-colors hover:bg-sky-50 motion-reduce:transition-none sm:p-3"
           >
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-sky-100 text-sm font-bold text-sky-800">
               {step}
@@ -51,7 +51,7 @@ const LandingPage = () => (
           </div>
         ))}
       </section>
-      <section className="rounded-3xl bg-gradient-to-br from-sky-100 via-blue-50 to-white px-6 py-12 text-center shadow-inner shadow-sky-900/5 sm:px-12">
+      <section className="rounded-3xl border border-sky-100 bg-gradient-to-br from-sky-100 via-blue-50 to-white px-5 py-10 text-center shadow-inner shadow-sky-900/5 sm:px-12 sm:py-12">
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-sky-700">
           ¿Tienes un destino en mente?
         </p>
