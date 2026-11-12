@@ -49,7 +49,7 @@ function AdminContent({ children }: { children: ReactNode }) {
             </li>
             {[
               { href: '/admin/hoteles', label: 'Hoteles' },
-              { href: '/admin/combos', label: 'Combos' },
+              { href: '/admin/paquetes', label: 'Paquetes' },
               { href: '/admin/metricas', label: 'Métricas' },
             ].map(({ href, label }) => (
               <li key={href}>

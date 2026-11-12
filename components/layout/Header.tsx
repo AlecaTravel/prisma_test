@@ -99,16 +99,6 @@ const Header = () => {
               Administración
             </Link>
           )}
-          {user?.role === 'ADMIN' && (
-            <Link
-              href="/create"
-              onClick={compact ? closeMenu : undefined}
-              aria-current={isActive('/create') ? 'page' : undefined}
-              className={linkClass}
-            >
-              + Nuevo hotel
-            </Link>
-          )}
           <button
             type="button"
             onClick={() => {

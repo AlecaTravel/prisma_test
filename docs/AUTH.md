@@ -10,7 +10,7 @@
 | 2D — Guards de rol backend/frontend | ✅ | `server/auth-guards.ts`, `features/auth/RequireRole.tsx`, SSR redirects |
 | 2E — Página “Mis reservas” | ✅ | `pages/mis-reservas.tsx`, filtrado por `ctx.user.id` |
 | Google OAuth opcional | ✅ | `server/auth.ts`, `features/auth/GoogleSignInButton.tsx`; requiere configurar credenciales |
-| Gestión de combos | Implementación lista; despliegue pendiente | `pages/admin/combos.tsx`, `server/modules/promo-packages.ts`; migración pendiente de aplicar |
+| Gestión de paquetes | Código listo; despliegue de la app pendiente | `pages/admin/paquetes.tsx`, `server/modules/promo-packages.ts`; migración y seis datos iniciales aplicados en la base de producción seleccionada |
 
 Se añadió también una vista de operaciones en `/admin`. En el Pages Router no hay un convenio de layouts por archivo como `pages/admin/_layout.tsx`; el layout protegido vive en `features/auth/AdminLayout.tsx` y se consume desde `pages/admin/index.tsx`.
 
@@ -40,13 +40,29 @@ En desarrollo, Nodemailer usa `jsonTransport` y el enlace de acceso se imprime e
 
 Google solo se registra como proveedor cuando `AUTH_GOOGLE_ID` y
 `AUTH_GOOGLE_SECRET` están presentes; las páginas de acceso muestran el botón
-bajo la misma condición. Configura esos valores como secretos en cada entorno
-Vercel y registra el callback `https://<dominio>/api/auth/callback/google` en
-Google Cloud Console. Usa el dominio específico para Preview cuando hagas
-pruebas. No actives el enlace automático de cuentas por email: una cuenta local
-con el mismo correo debe autenticarse por su método existente antes de vincular
-identidades. El rol de una cuenta Google nueva proviene del valor por defecto
-de `User.role` (`CUSTOMER`), nunca de datos del perfil de Google.
+bajo la misma condición. La aplicación falla explícitamente si solo una de las
+dos variables está configurada.
+
+Para activarlo:
+
+1. En Google Cloud Console, configura la pantalla de consentimiento OAuth y
+   crea un cliente OAuth de tipo **Aplicación web**.
+2. Añade el dominio de la app como origen autorizado y
+   `https://<dominio>/api/auth/callback/google` como URI de redirección
+   autorizada. Para probar un Preview, registra también el dominio exacto de
+   ese deployment y su callback.
+3. En Vercel, configura `AUTH_GOOGLE_ID` y `AUTH_GOOGLE_SECRET` como variables
+   de entorno para los entornos que correspondan y vuelve a desplegar. No
+   compartas ni guardes el secreto en el repositorio.
+4. Si la pantalla de consentimiento está en modo de prueba, agrega las cuentas
+   que iniciarán sesión como usuarios de prueba.
+
+Este flujo es OAuth para iniciar sesión; no requiere habilitar APIs adicionales
+de Google ni solicitar scopes aparte del perfil básico de identidad. No actives
+el enlace automático de cuentas por email: una cuenta local con el mismo correo
+debe autenticarse por su método existente antes de vincular identidades. El rol
+de una cuenta Google nueva proviene del valor por defecto de `User.role`
+(`CUSTOMER`), nunca de datos del perfil de Google.
 
 ## Flujo de autorización y reservas
 
@@ -69,22 +85,38 @@ flowchart TD
 
 La UI añade un guard cliente para evitar mostrar contenido durante la navegación, pero la decisión de seguridad se vuelve a tomar en el servidor. `createManualHotel` exige `ADMIN`; `adminBookings` permite `AGENT` y `ADMIN`, y ofrece filtros con paginación cursorada; `myBookings` requiere sesión y siempre filtra por la identidad confiable del contexto. La reserva de invitado (`createBooking`) sigue disponible.
 
-## Combos promocionales
+## Paquetes promocionales
 
-`/admin/combos` está limitado en SSR y en GraphQL a `ADMIN` y `AGENT`.
-El formulario carga flyers JPG/PNG/WebP de hasta 8 MB a Vercel Blob; el
-endpoint de emisión del token verifica sesión/rol, tipo y tamaño, y limita la
-ruta a `combo-flyers/`. `BLOB_READ_WRITE_TOKEN` debe configurarse como secreto
-en Vercel Preview y Production. Los blobs son públicos porque se muestran en
-las tarjetas del sitio; no cargues contenido privado.
+`/admin/paquetes` está limitado en SSR y en GraphQL a `ADMIN` y `AGENT`.
+`/admin/combos` ya no es una ruta válida. Los paquetes actuales usan imágenes
+locales de `public/`, así que consultarlos y publicarlos no requiere configurar
+un servicio de almacenamiento externo. La migración y el importador se
+ejecutaron en la base de producción configurada: hay seis paquetes publicados
+con imágenes locales. En otros entornos, aplica la migración y ejecuta
+`npm run packages:seed`; el comando es idempotente y no sobrescribe registros.
+
+El store actual es privado. Conecta `aleca-travel-blob` al proyecto Vercel en
+Preview y Production y habilita la variable estándar
+`BLOB_READ_WRITE_TOKEN` para la conexión: el SDK la necesita para firmar los
+tokens de carga directa desde el navegador. Vercel configura
+`BLOB_STORE_ID`/OIDC para lecturas server-side; para desarrollo local, conecta
+también el entorno Development y usa `vercel env pull` sin compartir ni
+commitear el archivo de variables. Si falta `BLOB_READ_WRITE_TOKEN`, la lista
+sigue funcionando y el formulario de carga se deshabilita con un mensaje.
+
+Los flyers suben con acceso privado. La web no expone el URL privado del Blob:
+una API del mismo origen lee el objeto con el SDK y permite acceso público solo
+para paquetes publicados dentro de sus fechas; los borradores requieren sesión
+ADMIN/AGENT. Por ello, no se necesita permitir que el navegador lea directamente
+el dominio privado de Blob.
 
 El alta crea `PromoPackage` en estado borrador o publicado. Solo los publicados
-dentro de su ventana de fechas aparecen junto con los paquetes de muestra en
-la portada; el catálogo de hoteles no se modifica. La mutación Pothos vuelve a
-validar campos, precio, fechas y que URL/ruta de imagen coincidan. La migración
-`prisma/migrations/20261112120000_add_promo_packages/` debe desplegarse con el
-flujo de migraciones aprobado antes de usar la página contra una base real. La
-aplicación aún no ofrece edición de metadatos ni eliminación de blobs.
+dentro de su ventana de fechas aparecen en la portada; el catálogo de hoteles
+no se modifica. La mutación Pothos vuelve a validar campos, precio, fechas y
+que URL/ruta privada de imagen coincidan. La migración
+`prisma/migrations/20261112120000_add_promo_packages/` debe desplegarse en cada
+entorno antes de usar la lista o importar registros. La aplicación aún no
+ofrece edición de metadatos ni eliminación de blobs.
 
 ## Credenciales de datos semilla
 
@@ -136,7 +168,8 @@ Cobertura añadida:
 - `me` anónimo y con los tres roles;
 - mapeo de la sesión y guardas `UNAUTHENTICATED`/`FORBIDDEN`;
 - aislamiento de `myBookings`, autorización de `adminBookings` y vínculo de reserva a `ctx.user.id`;
-- permisos de combos para ADMIN/AGENT, denegación para CUSTOMER/anónimos y validación de URL/ruta de Blob;
+- permisos de paquetes para ADMIN/AGENT, denegación para CUSTOMER/anónimos y validación de URL/ruta de Blob;
+- validación de que la URL/ruta de un flyer debe pertenecer al store privado de Blob;
 - destinos de retorno de Google limitados a rutas relativas del mismo origen.
 
 ## Decisiones y límites

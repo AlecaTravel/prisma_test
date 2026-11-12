@@ -17,6 +17,12 @@ const emailFrom = process.env.EMAIL_FROM ?? 'Aleca Travel <no-reply@aleca.local>
 const googleClientId = process.env.AUTH_GOOGLE_ID?.trim();
 const googleClientSecret = process.env.AUTH_GOOGLE_SECRET?.trim();
 
+if (Boolean(googleClientId) !== Boolean(googleClientSecret)) {
+  throw new Error(
+    'Google OAuth requiere configurar juntos AUTH_GOOGLE_ID y AUTH_GOOGLE_SECRET',
+  );
+}
+
 function isUserRole(value: unknown): value is UserRole {
   return value === 'CUSTOMER' || value === 'AGENT' || value === 'ADMIN';
 }

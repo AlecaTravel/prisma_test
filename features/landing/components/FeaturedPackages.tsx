@@ -1,78 +1,17 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { PackageCard, type FixedPackage } from './PackageCard';
+import { featuredPackages } from '../data/featured-packages';
 import { graphql } from '../../../gql';
 
 type PackageCategory = 'Aventura' | 'Europa' | 'Playa' | 'Ciudad';
 type PackageFilter = 'Todos' | PackageCategory;
 
-const packages: FixedPackage[] = [
-  {
-    name: 'Costa Rica Aventurero',
-    category: 'Aventura',
-    destination: 'San José · Arenal · Manuel Antonio',
-    departure: '21 de febrero de 2027',
-    duration: '8 días · 7 noches',
-    price: '$38,559 MXN',
-    priceNote: 'por persona · base doble',
-    image: '/0- Costa RicaAventurero.jpeg',
-  },
-  {
-    name: 'Costa Amalfi & Mediterráneo',
-    category: 'Europa',
-    destination: 'Salida desde Milán',
-    departure: 'Noviembre de 2026',
-    duration: '8 días · 7 noches',
-    price: '$47,990 MXN',
-    priceNote: 'por persona',
-    image: '/1- Costa amalfi y mediterraneo.jpeg',
-  },
-  {
-    name: 'The Hacienda · Día de las Madres',
-    category: 'Playa',
-    destination: 'Puerto Vallarta, Jalisco',
-    departure: '8 al 11 de mayo de 2027',
-    duration: '4 días · 3 noches',
-    price: '$9,530 MXN',
-    priceNote: 'por persona por estancia · base doble',
-    image: '/DiaMadres Krystal Grand.jpeg',
-  },
-  {
-    name: 'The Hacienda · Independencia',
-    category: 'Playa',
-    destination: 'Puerto Vallarta, Jalisco',
-    departure: '14 al 17 de septiembre de 2027',
-    duration: '4 días · 3 noches',
-    price: '$11,698 MXN',
-    priceNote: 'por persona por estancia · base doble',
-    image: '/Independencia KrystalGrand.jpeg',
-  },
-  {
-    name: 'Las Vegas',
-    category: 'Ciudad',
-    destination: 'Salida desde Guadalajara',
-    departure: '13 de septiembre de 2027',
-    duration: '5 días · 4 noches',
-    price: '$19,715 MXN',
-    priceNote: 'por persona · base doble',
-    image: '/WhatsApp Image 2026-11-07 at 2.42.45 PM.jpeg',
-  },
-  {
-    name: 'RIU Mazatlán · San Valentín',
-    category: 'Playa',
-    destination: 'Mazatlán, Sinaloa',
-    departure: '12 al 15 de febrero de 2027',
-    duration: '4 días · 3 noches',
-    price: '$7,136 MXN',
-    priceNote: 'por persona en base doble',
-    image: '/WhatsApp Image 2026-11-07 at 2.42.45 PM (2).jpeg',
-  },
-];
-
 const PUBLISHED_PROMO_PACKAGES_QUERY = graphql(`
   query PublishedPromoPackages {
     publishedPromoPackages {
       id
+      slug
       title
       category
       destination
@@ -107,7 +46,7 @@ export function FeaturedPackages() {
   });
   const publishedPackages: FixedPackage[] = (promoData?.publishedPromoPackages ?? []).map(
     (travelPackage) => ({
-      id: travelPackage.id,
+      id: travelPackage.slug,
       name: travelPackage.title,
       category: packageCategory(travelPackage.category),
       destination: travelPackage.destination,
@@ -122,7 +61,12 @@ export function FeaturedPackages() {
       description: travelPackage.description,
     }),
   );
-  const visiblePackages = [...packages, ...publishedPackages].filter(
+  const publishedSlugs = new Set(publishedPackages.map((travelPackage) => travelPackage.id));
+  const packages = [
+    ...publishedPackages,
+    ...featuredPackages.filter((travelPackage) => !publishedSlugs.has(travelPackage.slug)),
+  ];
+  const visiblePackages = packages.filter(
     (travelPackage) => filter === 'Todos' || travelPackage.category === filter,
   );
   const filters: PackageFilter[] = ['Todos', 'Aventura', 'Europa', 'Playa', 'Ciudad'];
@@ -177,7 +121,7 @@ export function FeaturedPackages() {
       </div>
       {error && (
         <p role="status" className="mt-4 text-sm text-slate-600">
-          No se pudieron actualizar los combos recientes. Los paquetes destacados siguen disponibles.
+          No se pudieron actualizar los paquetes recientes. Los paquetes destacados siguen disponibles.
         </p>
       )}
       <p className="sr-only" aria-live="polite">

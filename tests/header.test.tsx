@@ -115,7 +115,7 @@ describe('responsive header navigation', () => {
     );
     expect(mobileNavigation.getByRole('link', { name: 'Mis reservas' })).toBeInTheDocument();
     expect(mobileNavigation.getByRole('link', { name: 'Administración' })).toBeInTheDocument();
-    expect(mobileNavigation.getByRole('link', { name: '+ Nuevo hotel' })).toBeInTheDocument();
+    expect(mobileNavigation.queryByRole('link', { name: /Nuevo hotel/i })).not.toBeInTheDocument();
     expect(mobileNavigation.getByRole('button', { name: 'Cerrar sesión' })).toBeInTheDocument();
   });
 });

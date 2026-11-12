@@ -15,7 +15,7 @@ CREATE TABLE "PromoPackage" (
     "priceNote" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "imageUrl" TEXT NOT NULL,
-    "blobPathname" TEXT NOT NULL,
+    "blobPathname" TEXT,
     "status" "PromoPackageStatus" NOT NULL DEFAULT 'DRAFT',
     "startsAt" TIMESTAMP(3),
     "endsAt" TIMESTAMP(3),

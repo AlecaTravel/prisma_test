@@ -10,8 +10,9 @@ architecture constraints.
 - `/api/graphql` is the GraphQL BFF for the web app and future native clients.
 - GraphQL Yoga 5, Pothos 4, Prisma 7/PostgreSQL.
 - Apollo Client 4 and GraphQL Code Generator.
-- Auth.js / next-auth v5 beta with Prisma adapter and JWT sessions. Current
-  providers are Credentials and Nodemailer; Auth0 and Google are not configured.
+- Auth.js / next-auth v5 beta with Prisma adapter and JWT sessions. Credentials
+  and Nodemailer are enabled; Google OAuth is conditional on
+  `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET`. Auth0 is not configured.
 - Redis via `ioredis` and `rate-limiter-flexible`; Upstash TCP/TLS is used for
   shared provider services and production GraphQL rate limiting.
 - No live third-party travel API integration is active.
@@ -29,6 +30,16 @@ architecture constraints.
   package information. Database-backed catalog/search UI is temporarily gated,
   not deleted; enable it only after inventory data and API readiness are
   confirmed.
+- Promotional packages use the `PromoPackage` model. The six current offers
+  have been imported as published records in the configured production
+  database, with their existing local flyers. The reviewed migration and
+  idempotent `npm run packages:seed` command are in source control; apply both
+  in other environments before using package management there. Local public
+  images do not require a storage service. New flyer uploads target the
+  connected private Vercel Blob store; `BLOB_READ_WRITE_TOKEN` is required for
+  client-upload token generation. Published Blob flyers are served through a
+  same-origin API route, while drafts require an ADMIN/AGENT session.
+  Package administration is available at `/admin/paquetes` to ADMIN/AGENT.
 - Role checks and object ownership must be enforced in resolvers. Auth.js
   authenticates sessions; it does not replace authorization.
 

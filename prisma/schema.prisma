@@ -632,7 +632,7 @@ model PromoPackage {
   priceNote    String
   description  String
   imageUrl     String
-  blobPathname String
+  blobPathname String?
   status       PromoPackageStatus   @default(DRAFT)
   startsAt     DateTime?
   endsAt       DateTime?

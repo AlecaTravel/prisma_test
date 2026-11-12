@@ -83,7 +83,7 @@ const validPackageVariables = {
   currency: 'MXN',
   priceNote: 'por persona',
   description: 'Descripción de prueba',
-  imageUrl: 'https://store.public.blob.vercel-storage.com/combo-flyers/combo.jpg',
+  imageUrl: 'https://store.private.blob.vercel-storage.com/combo-flyers/combo.jpg',
   blobPathname: 'combo-flyers/combo.jpg',
 };
 
@@ -92,6 +92,7 @@ describe('promo packages access control', () => {
     currentUser = null;
     vi.clearAllMocks();
     promoPackage.findMany.mockResolvedValue([]);
+    promoPackage.create.mockResolvedValue({ id: 'package-1' });
   });
 
   it.each([
@@ -140,10 +141,30 @@ describe('promo packages access control', () => {
 
     const result = await gql(CREATE_PACKAGE, {
       ...validPackageVariables,
-      imageUrl: 'https://store.public.blob.vercel-storage.com/combo-flyers/other.jpg',
+      imageUrl: 'https://store.private.blob.vercel-storage.com/combo-flyers/other.jpg',
     });
 
     expect(result.errors?.[0]?.extensions?.code).toBe('BAD_USER_INPUT');
     expect(promoPackage.create).not.toHaveBeenCalled();
+  });
+
+  it('accepts a private Blob URL when its pathname matches the flyer path', async () => {
+    currentUser = { id: 'agent-1', role: 'AGENT' };
+
+    const result = await gql<{ createPromoPackage: { id: string } }>(
+      CREATE_PACKAGE,
+      validPackageVariables,
+    );
+
+    expect(result.errors).toBeUndefined();
+    expect(result.data?.createPromoPackage.id).toBe('package-1');
+    expect(promoPackage.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          imageUrl: validPackageVariables.imageUrl,
+          blobPathname: validPackageVariables.blobPathname,
+        }),
+      }),
+    );
   });
 });

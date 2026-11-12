@@ -49,12 +49,20 @@ These are uncommitted development changes:
   linking is not enabled.
 - Mobile admin reservation, hotel, and dashboard tables use labeled card rows
   below 640px; desktop table presentation remains unchanged.
-- Combo flyer administration is implemented at `/admin/combos`: ADMIN/AGENT
-  can upload public flyers to Vercel Blob, create draft/published packages, and
-  archive or republish them. Published offers are appended to the existing
-  homepage mock cards. The Prisma migration is authored but has not been
-  applied; Blob and Google environment setup and deployment verification are
-  still required. Editing package metadata and deleting blobs are not included.
+- Package management is implemented at `/admin/paquetes`: ADMIN/AGENT can list
+  packages, create draft/published packages, and
+  archive or republish them. `/admin/combos` has been removed; `/admin/paquetes`
+  is the canonical route. Hotel registration is available from the hotel
+  administration page, not the global account menu.
+  The additive Prisma migration was applied to the configured production
+  database, and `npm run packages:seed` inserted the six existing public offers
+  with their local `public/` images without overwriting existing rows. New
+  flyer uploads use private Vercel Blob storage; the upload token endpoint
+  requires `BLOB_READ_WRITE_TOKEN`, and a same-origin API streams published
+  images publicly while requiring staff auth for drafts. The user created a
+  private store, but local `BLOB_READ_WRITE_TOKEN`, `BLOB_STORE_ID`, and OIDC
+  variables are not configured here, so a live upload could not yet be tested.
+  Editing package metadata and deleting blobs are not included.
 - The public landing page shows the fixed package cards rather than
   Prisma-backed destinations or hotel results. The original search and listing
   implementation remains in `pages/search.tsx`, gated by
@@ -74,9 +82,10 @@ These are uncommitted development changes:
 
 ## Verification state
 
-- `npx tsc --noEmit`: passed after the Google OAuth and promo package changes.
+- `npx tsc --noEmit`: passed after private Blob upload/read adaptation.
 - `npx prisma validate`: passed with the new `PromoPackage` model.
-- `npm run graphql:sync`: passed; exported schema and generated 21 persisted operations.
+- `npm run graphql:sync`: passed; exported schema and generated 21 persisted
+  operations including the package slug used for de-duplication.
 - `npm run security:verify-persisted`: passed. Apollo 4 sent only the generated
   SHA-256 hash, Yoga found and executed that operation from the generated
   manifest, production Yoga rejected a raw arbitrary operation, and Armor
@@ -84,15 +93,25 @@ These are uncommitted development changes:
   operations also fit the configured depth, alias, and token limits (maximum
   observed depth 5 and 0 aliases).
 - `npm run security:verify-rate-limit`: passed against configured Redis.
-- `npm run build`: passed, including `/admin/combos` and its upload API route.
+- `npm run build`: passed previously, including `/admin/paquetes` and the
+  private Blob image API route. The redirect route was removed afterward and
+  needs a fresh build check.
 - Local server smoke checks: `/` returned 200; unauthenticated
-  `/admin/combos` redirected to login (307).
+  `/admin/paquetes` redirected to login (307).
+- All six package records point to existing local flyer images in `public/`.
+- `npx prisma migrate deploy`: applied the additive package migration to the
+  user-selected production database.
+- `npm run packages:seed`: inserted six packages. A read-only Prisma query
+  confirmed all six are `PUBLISHED`, use local image paths, and have no Blob
+  path; a second `prisma migrate status` reported the database up to date.
+- Live Blob upload was not tested because this local process has no
+  `BLOB_READ_WRITE_TOKEN`/`BLOB_STORE_ID` and no authenticated staff session.
+  The store's Vercel project/environment connection still needs verification.
 - Vitest focused runs for promo-package access and safe callback tests could
-  not execute: the runner terminates with illegal instruction (`SIGILL`, exit
-  132) before reporting test results, including with a single-process pool.
+  not produce results: a focused run terminated with illegal instruction
+  (`SIGILL`, exit 132); the latest invocation also exited before reporting tests.
 - Direct runtime assertions for `safeCallbackUrl` passed.
-- `git diff --check` reports trailing whitespace in Prisma-generated output
-  (`prisma/generated/*`); these generated files were not hand-edited.
+- `git diff --check`: passed after regenerating Prisma output.
 - Dependency installation reported 8 audit findings (3 moderate, 5 high) and
   existing Node engine warnings for the current Node 22.20.0 versus some
   installed packages. These findings have not yet been triaged; do not run

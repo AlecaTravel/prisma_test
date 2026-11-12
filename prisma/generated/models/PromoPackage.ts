@@ -270,7 +270,7 @@ export type PromoPackageGroupByOutputType = {
   priceNote: string
   description: string
   imageUrl: string
-  blobPathname: string
+  blobPathname: string | null
   status: $Enums.PromoPackageStatus
   startsAt: Date | null
   endsAt: Date | null
@@ -314,7 +314,7 @@ export type PromoPackageWhereInput = {
   priceNote?: Prisma.StringFilter<"PromoPackage"> | string
   description?: Prisma.StringFilter<"PromoPackage"> | string
   imageUrl?: Prisma.StringFilter<"PromoPackage"> | string
-  blobPathname?: Prisma.StringFilter<"PromoPackage"> | string
+  blobPathname?: Prisma.StringNullableFilter<"PromoPackage"> | string | null
   status?: Prisma.EnumPromoPackageStatusFilter<"PromoPackage"> | $Enums.PromoPackageStatus
   startsAt?: Prisma.DateTimeNullableFilter<"PromoPackage"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableFilter<"PromoPackage"> | Date | string | null
@@ -335,7 +335,7 @@ export type PromoPackageOrderByWithRelationInput = {
   priceNote?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
-  blobPathname?: Prisma.SortOrder
+  blobPathname?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -359,7 +359,7 @@ export type PromoPackageWhereUniqueInput = Prisma.AtLeast<{
   priceNote?: Prisma.StringFilter<"PromoPackage"> | string
   description?: Prisma.StringFilter<"PromoPackage"> | string
   imageUrl?: Prisma.StringFilter<"PromoPackage"> | string
-  blobPathname?: Prisma.StringFilter<"PromoPackage"> | string
+  blobPathname?: Prisma.StringNullableFilter<"PromoPackage"> | string | null
   status?: Prisma.EnumPromoPackageStatusFilter<"PromoPackage"> | $Enums.PromoPackageStatus
   startsAt?: Prisma.DateTimeNullableFilter<"PromoPackage"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableFilter<"PromoPackage"> | Date | string | null
@@ -380,7 +380,7 @@ export type PromoPackageOrderByWithAggregationInput = {
   priceNote?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
-  blobPathname?: Prisma.SortOrder
+  blobPathname?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
   endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -409,7 +409,7 @@ export type PromoPackageScalarWhereWithAggregatesInput = {
   priceNote?: Prisma.StringWithAggregatesFilter<"PromoPackage"> | string
   description?: Prisma.StringWithAggregatesFilter<"PromoPackage"> | string
   imageUrl?: Prisma.StringWithAggregatesFilter<"PromoPackage"> | string
-  blobPathname?: Prisma.StringWithAggregatesFilter<"PromoPackage"> | string
+  blobPathname?: Prisma.StringNullableWithAggregatesFilter<"PromoPackage"> | string | null
   status?: Prisma.EnumPromoPackageStatusWithAggregatesFilter<"PromoPackage"> | $Enums.PromoPackageStatus
   startsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PromoPackage"> | Date | string | null
   endsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PromoPackage"> | Date | string | null
@@ -430,7 +430,7 @@ export type PromoPackageCreateInput = {
   priceNote: string
   description: string
   imageUrl: string
-  blobPathname: string
+  blobPathname?: string | null
   status?: $Enums.PromoPackageStatus
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -451,7 +451,7 @@ export type PromoPackageUncheckedCreateInput = {
   priceNote: string
   description: string
   imageUrl: string
-  blobPathname: string
+  blobPathname?: string | null
   status?: $Enums.PromoPackageStatus
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -472,7 +472,7 @@ export type PromoPackageUpdateInput = {
   priceNote?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  blobPathname?: Prisma.StringFieldUpdateOperationsInput | string
+  blobPathname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPromoPackageStatusFieldUpdateOperationsInput | $Enums.PromoPackageStatus
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -493,7 +493,7 @@ export type PromoPackageUncheckedUpdateInput = {
   priceNote?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  blobPathname?: Prisma.StringFieldUpdateOperationsInput | string
+  blobPathname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPromoPackageStatusFieldUpdateOperationsInput | $Enums.PromoPackageStatus
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -514,7 +514,7 @@ export type PromoPackageCreateManyInput = {
   priceNote: string
   description: string
   imageUrl: string
-  blobPathname: string
+  blobPathname?: string | null
   status?: $Enums.PromoPackageStatus
   startsAt?: Date | string | null
   endsAt?: Date | string | null
@@ -535,7 +535,7 @@ export type PromoPackageUpdateManyMutationInput = {
   priceNote?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  blobPathname?: Prisma.StringFieldUpdateOperationsInput | string
+  blobPathname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPromoPackageStatusFieldUpdateOperationsInput | $Enums.PromoPackageStatus
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -556,7 +556,7 @@ export type PromoPackageUncheckedUpdateManyInput = {
   priceNote?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  blobPathname?: Prisma.StringFieldUpdateOperationsInput | string
+  blobPathname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPromoPackageStatusFieldUpdateOperationsInput | $Enums.PromoPackageStatus
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -747,7 +747,7 @@ export type $PromoPackagePayload<ExtArgs extends runtime.Types.Extensions.Intern
     priceNote: string
     description: string
     imageUrl: string
-    blobPathname: string
+    blobPathname: string | null
     status: $Enums.PromoPackageStatus
     startsAt: Date | null
     endsAt: Date | null

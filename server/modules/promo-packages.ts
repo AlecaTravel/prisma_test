@@ -29,7 +29,12 @@ const PromoPackage = builder.prismaObject('PromoPackage', {
     currency: t.exposeString('currency'),
     priceNote: t.exposeString('priceNote'),
     description: t.exposeString('description'),
-    imageUrl: t.exposeString('imageUrl'),
+    imageUrl: t.string({
+      resolve: (item) =>
+        item.blobPathname
+          ? `/api/paquetes/${encodeURIComponent(item.slug)}/imagen`
+          : item.imageUrl,
+    }),
     status: t.expose('status', { type: PromoPackageStatus }),
     startsAt: t.expose('startsAt', { type: 'DateTime', nullable: true }),
     endsAt: t.expose('endsAt', { type: 'DateTime', nullable: true }),
@@ -56,16 +61,21 @@ function validateImage(imageUrl: string, blobPathname: string) {
     url = new URL(imageUrl);
     decodedPathname = decodeURIComponent(url.pathname.slice(1));
   } catch {
-    return badInput('La imagen debe provenir de una carga válida de Vercel Blob');
+    return badInput('La imagen debe provenir de una carga privada válida de Vercel Blob');
   }
 
   if (
     url.protocol !== 'https:' ||
-    !url.hostname.endsWith('.public.blob.vercel-storage.com') ||
+    !url.hostname.endsWith('.private.blob.vercel-storage.com') ||
     !blobPathname.startsWith('combo-flyers/') ||
-    decodedPathname !== blobPathname
+    decodedPathname !== blobPathname ||
+    url.username !== '' ||
+    url.password !== '' ||
+    url.port !== '' ||
+    url.search !== '' ||
+    url.hash !== ''
   ) {
-    badInput('La imagen debe provenir de una carga válida de Vercel Blob');
+    badInput('La imagen debe provenir de una carga privada válida de Vercel Blob');
   }
 }
 
@@ -164,7 +174,7 @@ builder.mutationField('createPromoPackage', (t) =>
       return ctx.prisma.promoPackage.create({
         ...query,
         data: {
-          slug: `${slugify(title) || 'combo'}-${randomUUID().slice(0, 8)}`,
+          slug: `${slugify(title) || 'paquete'}-${randomUUID().slice(0, 8)}`,
           title,
           category: args.category,
           destination,

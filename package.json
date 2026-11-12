@@ -10,6 +10,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "seed": "prisma db seed",
+    "packages:seed": "tsx scripts/seed-promo-packages.ts",
     "graphql:export": "tsx scripts/export-schema.ts",
     "graphql:codegen": "graphql-codegen --config codegen.ts",
     "graphql:sync": "npm run graphql:export && npm run graphql:codegen",

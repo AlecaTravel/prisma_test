@@ -131,6 +131,7 @@ function AdminHotelsPage() {
   } | null>(null);
   const [createError, setCreateError] = useState('');
   const [updateError, setUpdateError] = useState('');
+  const [createFormOpen, setCreateFormOpen] = useState(false);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -225,6 +226,7 @@ function AdminHotelsPage() {
       formElement.reset();
       setSearchInput('');
       setStatusInput('');
+      setCreateFormOpen(false);
       void router.push('/admin/hoteles');
     } catch (cause) {
       setCreateError(cause instanceof Error ? cause.message : 'No se pudo crear el hotel.');
@@ -266,12 +268,29 @@ function AdminHotelsPage() {
             <h2 className="mt-1 text-2xl font-semibold text-slate-900">Gestión de hoteles</h2>
             <p className="mt-1 text-sm text-slate-600">Busca, actualiza y controla la publicación del catálogo.</p>
           </div>
-          <Link href="/admin" className="text-sm font-medium text-sky-700 hover:underline">Volver al resumen</Link>
+          <div className="flex items-center gap-3">
+            {isAdmin && (
+              <button
+                type="button"
+                aria-expanded={createFormOpen}
+                aria-controls="registrar-hotel"
+                onClick={() => setCreateFormOpen((open) => !open)}
+                className="min-h-10 rounded-lg bg-sky-800 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-800"
+              >
+                {createFormOpen ? 'Cancelar' : '+ Nuevo hotel'}
+              </button>
+            )}
+            <Link href="/admin" className="text-sm font-medium text-sky-700 hover:underline">Volver al resumen</Link>
+          </div>
         </header>
 
         {isAdmin && (
-          <details className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <summary className="cursor-pointer font-semibold">Registrar hotel manual</summary>
+          <section
+            id="registrar-hotel"
+            hidden={!createFormOpen}
+            className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+          >
+            <h3 className="font-semibold">Registrar hotel manual</h3>
             <form onSubmit={handleCreate} className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <label className="text-sm">Nombre del hotel
                 <input name="title" required maxLength={160} className="mt-1 w-full rounded-md border p-2" />
@@ -297,7 +316,7 @@ function AdminHotelsPage() {
               </div>
             </form>
             {createError && <p role="alert" className="mt-3 text-sm text-red-700">{createError}</p>}
-          </details>
+          </section>
         )}
 
         <form onSubmit={applyFilters} className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4" aria-label="Filtros de hoteles">

@@ -40,14 +40,19 @@ function AdminDashboard() {
     <AdminLayout>
       <Head><title>Administración — Aleca Travel</title></Head>
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold">Reservas recientes</h2>
             <p className="text-sm text-slate-600">Vista operativa para agentes y administradores.</p>
           </div>
-          <Link href="/admin/reservas" className="text-sm text-sky-700 underline">
-            Ver todas las reservas
-          </Link>
+          <nav aria-label="Accesos de administración" className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+            <Link href="/admin/reservas" className="text-sky-700 underline">
+              Ver todas las reservas
+            </Link>
+            <Link href="/admin/hoteles" className="text-sky-700 underline">
+              Administrar hoteles
+            </Link>
+          </nav>
         </div>
         {loading && <p role="status" className="mt-4">Cargando…</p>}
         {error && <p role="alert" className="mt-4 text-red-700">No se pudieron cargar las reservas.</p>}

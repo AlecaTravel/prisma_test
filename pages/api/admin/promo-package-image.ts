@@ -38,6 +38,12 @@ export default async function promoPackageImageUpload(
     return res.status(405).json({ error: 'Método no permitido.' });
   }
 
+  if (!process.env.BLOB_READ_WRITE_TOKEN?.trim()) {
+    return res.status(503).json({
+      error: 'La carga de flyers no está configurada en este entorno.',
+    });
+  }
+
   try {
     const body = req.body as HandleUploadBody;
     const result = await handleUpload({
@@ -76,7 +82,7 @@ export default async function promoPackageImageUpload(
       return res.status(400).json({ error: 'La ruta o el formato de imagen no es válido.' });
     }
 
-    console.error('No se pudo procesar la carga del flyer de combo.', error);
+    console.error('No se pudo procesar la carga del flyer del paquete.', error);
     return res.status(500).json({ error: 'No se pudo procesar la carga de la imagen.' });
   }
 }
