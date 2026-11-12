@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.10.0
- * Query Engine version: 0edf323efd1d98336f3f0a68684b56f689b900d3
+ * Prisma Client JS version: 7.10.1
+ * Query Engine version: d1b3f377ca835d73fd50954a5e22128b9ebdd6b8
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.10.0",
-  engine: "0edf323efd1d98336f3f0a68684b56f689b900d3"
+  client: "7.10.1",
+  engine: "d1b3f377ca835d73fd50954a5e22128b9ebdd6b8"
 }
 
 /**
@@ -421,6 +421,7 @@ export const ModelName = {
   BookingItem: 'BookingItem',
   BookingEvent: 'BookingEvent',
   Favorite: 'Favorite',
+  PromoPackage: 'PromoPackage',
   UserEvent: 'UserEvent'
 } as const
 
@@ -437,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "profile" | "account" | "session" | "verificationToken" | "provider" | "providerMapping" | "roomMapping" | "destination" | "hotel" | "hotelTag" | "pointOfInterest" | "hotelPointOfInterest" | "seedProgress" | "hotelImage" | "amenity" | "hotelAmenity" | "room" | "roomInventory" | "quote" | "booking" | "bookingItem" | "bookingEvent" | "favorite" | "userEvent"
+    modelProps: "user" | "profile" | "account" | "session" | "verificationToken" | "provider" | "providerMapping" | "roomMapping" | "destination" | "hotel" | "hotelTag" | "pointOfInterest" | "hotelPointOfInterest" | "seedProgress" | "hotelImage" | "amenity" | "hotelAmenity" | "room" | "roomInventory" | "quote" | "booking" | "bookingItem" | "bookingEvent" | "favorite" | "promoPackage" | "userEvent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2217,6 +2218,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PromoPackage: {
+      payload: Prisma.$PromoPackagePayload<ExtArgs>
+      fields: Prisma.PromoPackageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PromoPackageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PromoPackageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload>
+        }
+        findFirst: {
+          args: Prisma.PromoPackageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PromoPackageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload>
+        }
+        findMany: {
+          args: Prisma.PromoPackageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload>[]
+        }
+        create: {
+          args: Prisma.PromoPackageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload>
+        }
+        createMany: {
+          args: Prisma.PromoPackageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PromoPackageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload>[]
+        }
+        delete: {
+          args: Prisma.PromoPackageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload>
+        }
+        update: {
+          args: Prisma.PromoPackageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload>
+        }
+        deleteMany: {
+          args: Prisma.PromoPackageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PromoPackageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PromoPackageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload>[]
+        }
+        upsert: {
+          args: Prisma.PromoPackageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromoPackagePayload>
+        }
+        aggregate: {
+          args: Prisma.PromoPackageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePromoPackage>
+        }
+        groupBy: {
+          args: Prisma.PromoPackageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PromoPackageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PromoPackageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PromoPackageCountAggregateOutputType> | number
+        }
+      }
+    }
     UserEvent: {
       payload: Prisma.$UserEventPayload<ExtArgs>
       fields: Prisma.UserEventFieldRefs
@@ -2700,6 +2775,30 @@ export const FavoriteScalarFieldEnum = {
 export type FavoriteScalarFieldEnum = (typeof FavoriteScalarFieldEnum)[keyof typeof FavoriteScalarFieldEnum]
 
 
+export const PromoPackageScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  category: 'category',
+  destination: 'destination',
+  departure: 'departure',
+  duration: 'duration',
+  price: 'price',
+  currency: 'currency',
+  priceNote: 'priceNote',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  blobPathname: 'blobPathname',
+  status: 'status',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PromoPackageScalarFieldEnum = (typeof PromoPackageScalarFieldEnum)[keyof typeof PromoPackageScalarFieldEnum]
+
+
 export const UserEventScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -2993,6 +3092,34 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 
 
 /**
+ * Reference to a field of type 'PromoPackageCategory'
+ */
+export type EnumPromoPackageCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromoPackageCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'PromoPackageCategory[]'
+ */
+export type ListEnumPromoPackageCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromoPackageCategory[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PromoPackageStatus'
+ */
+export type EnumPromoPackageStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromoPackageStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PromoPackageStatus[]'
+ */
+export type ListEnumPromoPackageStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromoPackageStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'EventType'
  */
 export type EnumEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventType'>
@@ -3180,6 +3307,7 @@ export type GlobalOmitConfig = {
   bookingItem?: Prisma.BookingItemOmit
   bookingEvent?: Prisma.BookingEventOmit
   favorite?: Prisma.FavoriteOmit
+  promoPackage?: Prisma.PromoPackageOmit
   userEvent?: Prisma.UserEventOmit
 }
 

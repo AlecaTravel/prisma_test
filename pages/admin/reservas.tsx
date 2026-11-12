@@ -283,7 +283,7 @@ function AdminBookingsPage() {
           )}
           {bookings.length > 0 && (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="admin-data-table w-full text-left text-sm">
                 <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-600">
                   <tr>
                     <th scope="col" className="px-4 py-3">Referencia</th>
@@ -296,13 +296,13 @@ function AdminBookingsPage() {
                 <tbody className="divide-y divide-slate-100">
                   {bookings.map((booking) => (
                     <tr key={booking.id} className="hover:bg-slate-50">
-                      <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900">{booking.reference}</td>
-                      <td className="whitespace-nowrap px-4 py-3">
+                      <td data-label="Referencia" className="font-medium text-slate-900 sm:whitespace-nowrap sm:px-4 sm:py-3">{booking.reference}</td>
+                      <td data-label="Estado" className="sm:whitespace-nowrap sm:px-4 sm:py-3">
                         <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">{booking.status}</span>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3">{formatMoney(booking.totalAmount, booking.currency)}</td>
-                      <td className="whitespace-nowrap px-4 py-3 text-slate-600">{formatDate(booking.createdAt)}</td>
-                      <td className="whitespace-nowrap px-4 py-3 text-right">
+                      <td data-label="Total" className="sm:whitespace-nowrap sm:px-4 sm:py-3">{formatMoney(booking.totalAmount, booking.currency)}</td>
+                      <td data-label="Creada" className="text-slate-600 sm:whitespace-nowrap sm:px-4 sm:py-3">{formatDate(booking.createdAt)}</td>
+                      <td data-label="Acciones" className="text-right sm:whitespace-nowrap sm:px-4 sm:py-3">
                         <Link href={`/admin/reservas/${booking.id}`} className="font-medium text-sky-700 hover:underline">
                           Ver detalle
                         </Link>

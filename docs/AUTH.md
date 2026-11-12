@@ -9,6 +9,8 @@
 | 2C — Query `me` y sesión en frontend | ✅ | `server/modules/auth.ts`, `features/auth/useMe.ts`, `SessionProvider` |
 | 2D — Guards de rol backend/frontend | ✅ | `server/auth-guards.ts`, `features/auth/RequireRole.tsx`, SSR redirects |
 | 2E — Página “Mis reservas” | ✅ | `pages/mis-reservas.tsx`, filtrado por `ctx.user.id` |
+| Google OAuth opcional | ✅ | `server/auth.ts`, `features/auth/GoogleSignInButton.tsx`; requiere configurar credenciales |
+| Gestión de combos | Implementación lista; despliegue pendiente | `pages/admin/combos.tsx`, `server/modules/promo-packages.ts`; migración pendiente de aplicar |
 
 Se añadió también una vista de operaciones en `/admin`. En el Pages Router no hay un convenio de layouts por archivo como `pages/admin/_layout.tsx`; el layout protegido vive en `features/auth/AdminLayout.tsx` y se consume desde `pages/admin/index.tsx`.
 
@@ -30,9 +32,21 @@ sequenceDiagram
   Auth->>Adapter: guardar token de verificación
   Adapter->>DB: INSERT VerificationToken
   Auth-->>UI: respuesta genérica de enlace enviado
+  UI->>Auth: Google OAuth (si está configurado)
+  Auth->>Adapter: guardar/consultar cuenta del proveedor
 ```
 
 En desarrollo, Nodemailer usa `jsonTransport` y el enlace de acceso se imprime en la terminal de Next con el formato `🔗 Magic link para <email>: <url>`. Ese enlace es un secreto de un solo uso: no lo compartas ni lo guardes en logs persistentes. En producción es obligatorio definir un transporte real.
+
+Google solo se registra como proveedor cuando `AUTH_GOOGLE_ID` y
+`AUTH_GOOGLE_SECRET` están presentes; las páginas de acceso muestran el botón
+bajo la misma condición. Configura esos valores como secretos en cada entorno
+Vercel y registra el callback `https://<dominio>/api/auth/callback/google` en
+Google Cloud Console. Usa el dominio específico para Preview cuando hagas
+pruebas. No actives el enlace automático de cuentas por email: una cuenta local
+con el mismo correo debe autenticarse por su método existente antes de vincular
+identidades. El rol de una cuenta Google nueva proviene del valor por defecto
+de `User.role` (`CUSTOMER`), nunca de datos del perfil de Google.
 
 ## Flujo de autorización y reservas
 
@@ -54,6 +68,23 @@ flowchart TD
 ```
 
 La UI añade un guard cliente para evitar mostrar contenido durante la navegación, pero la decisión de seguridad se vuelve a tomar en el servidor. `createManualHotel` exige `ADMIN`; `adminBookings` permite `AGENT` y `ADMIN`, y ofrece filtros con paginación cursorada; `myBookings` requiere sesión y siempre filtra por la identidad confiable del contexto. La reserva de invitado (`createBooking`) sigue disponible.
+
+## Combos promocionales
+
+`/admin/combos` está limitado en SSR y en GraphQL a `ADMIN` y `AGENT`.
+El formulario carga flyers JPG/PNG/WebP de hasta 8 MB a Vercel Blob; el
+endpoint de emisión del token verifica sesión/rol, tipo y tamaño, y limita la
+ruta a `combo-flyers/`. `BLOB_READ_WRITE_TOKEN` debe configurarse como secreto
+en Vercel Preview y Production. Los blobs son públicos porque se muestran en
+las tarjetas del sitio; no cargues contenido privado.
+
+El alta crea `PromoPackage` en estado borrador o publicado. Solo los publicados
+dentro de su ventana de fechas aparecen junto con los paquetes de muestra en
+la portada; el catálogo de hoteles no se modifica. La mutación Pothos vuelve a
+validar campos, precio, fechas y que URL/ruta de imagen coincidan. La migración
+`prisma/migrations/20261112120000_add_promo_packages/` debe desplegarse con el
+flujo de migraciones aprobado antes de usar la página contra una base real. La
+aplicación aún no ofrece edición de metadatos ni eliminación de blobs.
 
 ## Credenciales de datos semilla
 
@@ -78,6 +109,9 @@ AUTH_SECRET=<secreto-aleatorio-del-entorno>
 AUTH_TRUST_HOST=true
 EMAIL_SERVER=smtp://<usuario>:<contraseña>@<servidor>:587
 EMAIL_FROM=Aleca Travel <no-reply@tu-dominio.example>
+AUTH_GOOGLE_ID=<id-de-cliente-oauth>
+AUTH_GOOGLE_SECRET=<secreto-de-cliente-oauth>
+BLOB_READ_WRITE_TOKEN=<token-de-vercel-blob>
 ```
 
 `EMAIL_SERVER` no se exige para el transporte local de desarrollo; si se solicita un magic link en producción sin transporte configurado, la petición falla explícitamente. Mantén los valores reales únicamente en el gestor de secretos del despliegue. El proveedor local no envía emails.
@@ -88,6 +122,7 @@ EMAIL_FROM=Aleca Travel <no-reply@tu-dominio.example>
 npx tsc --noEmit
 npm run graphql:sync
 npm test -- tests/auth.test.ts tests/booking-auth.test.ts
+npm test -- tests/promo-packages.test.ts tests/safe-callback-url.test.ts
 npm test
 ```
 
@@ -100,7 +135,9 @@ Cobertura añadida:
 - autorización de Credentials con email normalizado y rechazo de credenciales incorrectas;
 - `me` anónimo y con los tres roles;
 - mapeo de la sesión y guardas `UNAUTHENTICATED`/`FORBIDDEN`;
-- aislamiento de `myBookings`, autorización de `adminBookings` y vínculo de reserva a `ctx.user.id`.
+- aislamiento de `myBookings`, autorización de `adminBookings` y vínculo de reserva a `ctx.user.id`;
+- permisos de combos para ADMIN/AGENT, denegación para CUSTOMER/anónimos y validación de URL/ruta de Blob;
+- destinos de retorno de Google limitados a rutas relativas del mismo origen.
 
 ## Decisiones y límites
 

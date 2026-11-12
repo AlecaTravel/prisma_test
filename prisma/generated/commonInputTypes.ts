@@ -544,6 +544,40 @@ export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
   _max?: Prisma.NestedJsonNullableFilter<$PrismaModel>
 }
 
+export type EnumPromoPackageCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.PromoPackageCategory | Prisma.EnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.PromoPackageCategory[] | Prisma.ListEnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PromoPackageCategory[] | Prisma.ListEnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPromoPackageCategoryFilter<$PrismaModel> | $Enums.PromoPackageCategory
+}
+
+export type EnumPromoPackageStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.PromoPackageStatus | Prisma.EnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PromoPackageStatus[] | Prisma.ListEnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PromoPackageStatus[] | Prisma.ListEnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPromoPackageStatusFilter<$PrismaModel> | $Enums.PromoPackageStatus
+}
+
+export type EnumPromoPackageCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PromoPackageCategory | Prisma.EnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.PromoPackageCategory[] | Prisma.ListEnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PromoPackageCategory[] | Prisma.ListEnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPromoPackageCategoryWithAggregatesFilter<$PrismaModel> | $Enums.PromoPackageCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPromoPackageCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPromoPackageCategoryFilter<$PrismaModel>
+}
+
+export type EnumPromoPackageStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PromoPackageStatus | Prisma.EnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PromoPackageStatus[] | Prisma.ListEnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PromoPackageStatus[] | Prisma.ListEnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPromoPackageStatusWithAggregatesFilter<$PrismaModel> | $Enums.PromoPackageStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPromoPackageStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPromoPackageStatusFilter<$PrismaModel>
+}
+
 export type EnumEventTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.EventType | Prisma.EnumEventTypeFieldRefInput<$PrismaModel>
   in?: $Enums.EventType[] | Prisma.ListEnumEventTypeFieldRefInput<$PrismaModel>
@@ -1053,6 +1087,40 @@ export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
   gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
+}
+
+export type NestedEnumPromoPackageCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.PromoPackageCategory | Prisma.EnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.PromoPackageCategory[] | Prisma.ListEnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PromoPackageCategory[] | Prisma.ListEnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPromoPackageCategoryFilter<$PrismaModel> | $Enums.PromoPackageCategory
+}
+
+export type NestedEnumPromoPackageStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.PromoPackageStatus | Prisma.EnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PromoPackageStatus[] | Prisma.ListEnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PromoPackageStatus[] | Prisma.ListEnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPromoPackageStatusFilter<$PrismaModel> | $Enums.PromoPackageStatus
+}
+
+export type NestedEnumPromoPackageCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PromoPackageCategory | Prisma.EnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.PromoPackageCategory[] | Prisma.ListEnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PromoPackageCategory[] | Prisma.ListEnumPromoPackageCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPromoPackageCategoryWithAggregatesFilter<$PrismaModel> | $Enums.PromoPackageCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPromoPackageCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPromoPackageCategoryFilter<$PrismaModel>
+}
+
+export type NestedEnumPromoPackageStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PromoPackageStatus | Prisma.EnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PromoPackageStatus[] | Prisma.ListEnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PromoPackageStatus[] | Prisma.ListEnumPromoPackageStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPromoPackageStatusWithAggregatesFilter<$PrismaModel> | $Enums.PromoPackageStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPromoPackageStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPromoPackageStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumEventTypeFilter<$PrismaModel = never> = {

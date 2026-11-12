@@ -52,6 +52,19 @@ enum EventType {
   BOOKED
 }
 
+enum PromoPackageCategory {
+  AVENTURA
+  EUROPA
+  PLAYA
+  CIUDAD
+}
+
+enum PromoPackageStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 enum PropertyType {
   HOTEL
   RESORT
@@ -604,6 +617,30 @@ model Favorite {
 
   @@id([userId, hotelId])
   @@index([hotelId])
+}
+
+model PromoPackage {
+  id           String               @id @default(cuid())
+  slug         String               @unique
+  title        String
+  category     PromoPackageCategory
+  destination  String
+  departure    String
+  duration     String
+  price        Decimal              @db.Decimal(12, 2)
+  currency     String               @default("MXN")
+  priceNote    String
+  description  String
+  imageUrl     String
+  blobPathname String
+  status       PromoPackageStatus   @default(DRAFT)
+  startsAt     DateTime?
+  endsAt       DateTime?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@index([status, startsAt, endsAt])
+  @@index([createdAt(sort: Desc)])
 }
 
 model UserEvent {

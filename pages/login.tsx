@@ -1,23 +1,14 @@
 import { useState, type FormEvent } from 'react';
+import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import Layout from '../components/layout/Layout';
+import { GoogleSignInButton } from '../features/auth/GoogleSignInButton';
+import { safeCallbackUrl } from '../features/auth/safeCallbackUrl';
 
-function safeCallbackUrl(value: string | string[] | undefined): string {
-  if (
-    typeof value !== 'string' ||
-    !value.startsWith('/') ||
-    value.startsWith('//') ||
-    value.includes('\\')
-  ) {
-    return '/';
-  }
-  return value;
-}
-
-export default function LoginPage() {
+export default function LoginPage({ googleEnabled }: { googleEnabled: boolean }) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -95,6 +86,14 @@ export default function LoginPage() {
               {loading ? 'Procesando…' : 'Entrar con contraseña'}
             </button>
           </form>
+          {googleEnabled && (
+            <>
+              <div className="flex items-center gap-3 text-xs uppercase text-gray-400">
+                <span className="h-px flex-1 bg-gray-200" />o<span className="h-px flex-1 bg-gray-200" />
+              </div>
+              <GoogleSignInButton callbackUrl={router.query.callbackUrl} />
+            </>
+          )}
           <div className="flex items-center gap-3 text-xs uppercase text-gray-400">
             <span className="h-px flex-1 bg-gray-200" />o<span className="h-px flex-1 bg-gray-200" />
           </div>
@@ -111,3 +110,14 @@ export default function LoginPage() {
     </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<{
+  googleEnabled: boolean;
+}> = async () => ({
+  props: {
+    googleEnabled: Boolean(
+      process.env.AUTH_GOOGLE_ID?.trim() &&
+        process.env.AUTH_GOOGLE_SECRET?.trim(),
+    ),
+  },
+});

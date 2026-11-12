@@ -290,7 +290,9 @@ type Mutation {
     destinationName: String!
     title: String!
   ): Hotel!
+  createPromoPackage(blobPathname: String!, category: PromoPackageCategory!, currency: String! = "MXN", departure: String!, description: String!, destination: String!, duration: String!, endsAt: DateTime, imageUrl: String!, price: String!, priceNote: String!, startsAt: DateTime, status: PromoPackageStatus = DRAFT, title: String!): PromoPackage!
   createQuote(adults: Int!, checkIn: Date!, checkOut: Date!, childrenAges: [Int!]!, hotelId: String!, roomId: String!): Quote!
+  setPromoPackageStatus(id: String!, status: PromoPackageStatus!): PromoPackage!
   signupUser(email: String!, name: String, password: String!): User!
   transitionAdminBooking(id: String!, reason: String, transition: AdminBookingTransition!): AdminBookingDetails!
 }
@@ -311,11 +313,44 @@ type Profile {
   phone: String
 }
 
+type PromoPackage {
+  category: PromoPackageCategory!
+  createdAt: DateTime!
+  currency: String!
+  departure: String!
+  description: String!
+  destination: String!
+  duration: String!
+  endsAt: DateTime
+  id: ID!
+  imageUrl: String!
+  price: String!
+  priceNote: String!
+  slug: String!
+  startsAt: DateTime
+  status: PromoPackageStatus!
+  title: String!
+}
+
+enum PromoPackageCategory {
+  AVENTURA
+  CIUDAD
+  EUROPA
+  PLAYA
+}
+
+enum PromoPackageStatus {
+  ARCHIVED
+  DRAFT
+  PUBLISHED
+}
+
 type Query {
   adminBookingById(id: String!): AdminBookingDetails
   adminBookingMetrics(fromDate: Date, toDate: Date): AdminBookingMetrics!
   adminBookings(after: String, before: String, first: Int, fromDate: Date, guestEmail: String, last: Int, providerCode: String, sort: AdminBookingSort = CREATED_DESC, status: AdminBookingStatus, toDate: Date): QueryAdminBookingsConnection!
   adminHotels(after: String, before: String, first: Int, last: Int, query: String, sort: AdminHotelSort = TITLE_ASC, status: AdminHotelStatus): QueryAdminHotelsConnection!
+  adminPromoPackages: [PromoPackage!]!
   amenities: [Amenity!]!
   destinationBySlug(slug: String!): Destination
   destinations(featuredOnly: Boolean = false, take: Int = 12): [Destination!]!
@@ -325,6 +360,7 @@ type Query {
   hotelsCount(filter: HotelFilter): Int!
   me: User
   myBookings(first: Int = 20, skip: Int = 0): [Booking!]!
+  publishedPromoPackages: [PromoPackage!]!
   searchHotels(checkIn: Date, checkOut: Date, destinationId: String, minStars: Int, query: String, skip: Int = 0, take: Int = 10): [Hotel!]! @deprecated(reason: "Usa hotels(filter, sort, first, after) y suggestions(query)")
   suggestions(query: String!, take: Int = 5): Suggestions!
 }

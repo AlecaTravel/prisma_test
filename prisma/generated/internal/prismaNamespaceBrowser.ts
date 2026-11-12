@@ -75,6 +75,7 @@ export const ModelName = {
   BookingItem: 'BookingItem',
   BookingEvent: 'BookingEvent',
   Favorite: 'Favorite',
+  PromoPackage: 'PromoPackage',
   UserEvent: 'UserEvent'
 } as const
 
@@ -462,6 +463,30 @@ export const FavoriteScalarFieldEnum = {
 } as const
 
 export type FavoriteScalarFieldEnum = (typeof FavoriteScalarFieldEnum)[keyof typeof FavoriteScalarFieldEnum]
+
+
+export const PromoPackageScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  category: 'category',
+  destination: 'destination',
+  departure: 'departure',
+  duration: 'duration',
+  price: 'price',
+  currency: 'currency',
+  priceNote: 'priceNote',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  blobPathname: 'blobPathname',
+  status: 'status',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PromoPackageScalarFieldEnum = (typeof PromoPackageScalarFieldEnum)[keyof typeof PromoPackageScalarFieldEnum]
 
 
 export const UserEventScalarFieldEnum = {

@@ -1,6 +1,6 @@
 # Aleca Travel — Project and Security State
 
-Last updated: 2026-11-11
+Last updated: 2026-11-12
 
 This is the authoritative current-state note for the repository. Read it before
 continuing security work. The roadmap checklist remains in
@@ -14,7 +14,8 @@ continuing security work. The roadmap checklist remains in
 - GraphQL Yoga 5.24.6 with Pothos 4 and Prisma 7/PostgreSQL.
 - Apollo Client 4; GraphQL Code Generator client preset.
 - Auth.js / `next-auth` v5 beta, Prisma adapter, Credentials and Nodemailer
-  providers. Auth0 is not configured.
+  providers; optional Google OAuth is implemented but requires per-environment
+  credentials. Auth0 is not configured.
 - Redis (`ioredis`), `rate-limiter-flexible`, and BullMQ are available in the
   project. Redis environment variable names already used by provider services:
   `REDIS_URL` or `VALKEY_URL`.
@@ -32,7 +33,7 @@ These are uncommitted development changes:
   `@graphql-yoga/plugin-persisted-operations` 3.24.6, and
   `@escape.tech/graphql-armor` 3.2.0.
 - Codegen has `persistedDocuments` enabled with unprefixed SHA-256 hashes. The
-  generated `gql/persisted-documents.json` currently contains 17 operations;
+  generated `gql/persisted-documents.json` currently contains 21 operations;
   generated client documents include their hashes.
 - Yoga’s persisted-operation plugin loads that manifest, rejects arbitrary
   query text in production, and permits arbitrary text outside production.
@@ -43,6 +44,17 @@ These are uncommitted development changes:
   Vercel client identity comes from a validated Vercel forwarded-IP header;
   Redis/identity failures fail closed with 503, and excess traffic gets 429.
   Request batching is disabled and the HTTP body cap is 1 MB.
+- Google OAuth sign-in is conditionally available when both Google credentials
+  are set. No credential values are committed, and automatic email account
+  linking is not enabled.
+- Mobile admin reservation, hotel, and dashboard tables use labeled card rows
+  below 640px; desktop table presentation remains unchanged.
+- Combo flyer administration is implemented at `/admin/combos`: ADMIN/AGENT
+  can upload public flyers to Vercel Blob, create draft/published packages, and
+  archive or republish them. Published offers are appended to the existing
+  homepage mock cards. The Prisma migration is authored but has not been
+  applied; Blob and Google environment setup and deployment verification are
+  still required. Editing package metadata and deleting blobs are not included.
 - The public landing page shows the fixed package cards rather than
   Prisma-backed destinations or hotel results. The original search and listing
   implementation remains in `pages/search.tsx`, gated by
@@ -62,34 +74,25 @@ These are uncommitted development changes:
 
 ## Verification state
 
-- `npx tsc --noEmit`: passed after the Armor integration and regression tests.
-- `npm run graphql:codegen`: passed; 17 persisted operations generated.
+- `npx tsc --noEmit`: passed after the Google OAuth and promo package changes.
+- `npx prisma validate`: passed with the new `PromoPackage` model.
+- `npm run graphql:sync`: passed; exported schema and generated 21 persisted operations.
 - `npm run security:verify-persisted`: passed. Apollo 4 sent only the generated
   SHA-256 hash, Yoga found and executed that operation from the generated
   manifest, production Yoga rejected a raw arbitrary operation, and Armor
-  rejected test operations exceeding depth and alias limits. All 17 generated
+  rejected test operations exceeding depth and alias limits. All 21 generated
   operations also fit the configured depth, alias, and token limits (maximum
   observed depth 5 and 0 aliases).
-- `npm run providers:redis-check`: passed against the configured Upstash TCP/TLS
-  endpoint.
-- `npm run security:verify-rate-limit`: passed against Upstash. It verifies
-  per-IP/per-user rejection with temporary random keys and deletes them after.
-- Production Next.js route smoke test: passed with Vercel-style client IP and
-  explicit local dotenv loading. Redis rate limiting allowed the request to
-  reach Yoga, which then rejected arbitrary query text as expected.
-- Built HTML check: `/` omits destination/hotel listings; `/search` renders the
-  coming-soon page with the catalog feature flag disabled.
-- `npm run build`: passed after the rate limiter, feature-gated search page and
-  presentation updates, including production `/api/graphql` compilation.
-- Direct Node exercise of the Phase 1 plugins: passed for introspection and
-  suggestion blocking.
-- `npm test -- tests/graphql-security.test.ts` and
-  `npm test -- tests/landing.test.tsx`: Vitest crashes with an
-  illegal-instruction (`SIGILL`, process exit
-  132) before reporting test results. The cause within the runtime/native
-  dependencies is not yet isolated. The integration assertions are therefore
-  not verified by Vitest, although the standalone Apollo-to-Yoga verifier passes.
-- `git diff --check`: passed at the last check.
+- `npm run security:verify-rate-limit`: passed against configured Redis.
+- `npm run build`: passed, including `/admin/combos` and its upload API route.
+- Local server smoke checks: `/` returned 200; unauthenticated
+  `/admin/combos` redirected to login (307).
+- Vitest focused runs for promo-package access and safe callback tests could
+  not execute: the runner terminates with illegal instruction (`SIGILL`, exit
+  132) before reporting test results, including with a single-process pool.
+- Direct runtime assertions for `safeCallbackUrl` passed.
+- `git diff --check` reports trailing whitespace in Prisma-generated output
+  (`prisma/generated/*`); these generated files were not hand-edited.
 - Dependency installation reported 8 audit findings (3 moderate, 5 high) and
   existing Node engine warnings for the current Node 22.20.0 versus some
   installed packages. These findings have not yet been triaged; do not run
@@ -131,15 +134,16 @@ deferred because the application does not issue API keys.
 
 ### Phase 4 — Authentication and authorization
 
-Auth.js currently authenticates with Credentials and Nodemailer providers and
-uses the Prisma adapter with JWT sessions. Its session callback carries the
-database user ID and role into GraphQL context. The Prisma user role is
+Auth.js authenticates with Credentials and Nodemailer and optionally Google
+when configured; it uses the Prisma adapter with JWT sessions. Its session
+callback carries the database user ID and role into GraphQL context. The Prisma user role is
 `CUSTOMER | AGENT | ADMIN`; existing resolver-level role checks protect admin
 operations, and `myBookings` filters by the authenticated context user.
 
 Auth.js provides authentication/session handling; the Pothos resolver guards
-and ownership filters provide authorization. Auth0 and Google providers are
-not configured.
+and ownership filters provide authorization. Auth0 is not configured. Google
+OAuth needs per-environment client credentials and callback URLs before it can
+be exercised in Preview/Production.
 
 Do not mark authorization complete yet. Review `createBooking` and its provider
 path for object-level ownership: it looks up bookings by the caller-supplied

@@ -1,5 +1,6 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import Credentials from 'next-auth/providers/credentials';
+import Google from 'next-auth/providers/google';
 import Nodemailer from 'next-auth/providers/nodemailer';
 import NextAuth from 'next-auth';
 import type { UserRole } from '../prisma/generated/client';
@@ -13,6 +14,8 @@ const emailServer: string | { jsonTransport: true } =
   configuredEmailServer ?? { jsonTransport: true };
 
 const emailFrom = process.env.EMAIL_FROM ?? 'Aleca Travel <no-reply@aleca.local>';
+const googleClientId = process.env.AUTH_GOOGLE_ID?.trim();
+const googleClientSecret = process.env.AUTH_GOOGLE_SECRET?.trim();
 
 function isUserRole(value: unknown): value is UserRole {
   return value === 'CUSTOMER' || value === 'AGENT' || value === 'ADMIN';
@@ -51,6 +54,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
       },
     }),
+    ...(googleClientId && googleClientSecret
+      ? [Google({ clientId: googleClientId, clientSecret: googleClientSecret })]
+      : []),
   ],
   callbacks: {
     async jwt({ token, user }) {

@@ -138,6 +138,11 @@ export type BookingEvent = Prisma.BookingEventModel
  */
 export type Favorite = Prisma.FavoriteModel
 /**
+ * Model PromoPackage
+ * 
+ */
+export type PromoPackage = Prisma.PromoPackageModel
+/**
  * Model UserEvent
  * 
  */

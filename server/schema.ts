@@ -7,6 +7,7 @@ import './modules/booking';
 import './modules/user';
 import './modules/auth';
 import './modules/admin';
+import './modules/promo-packages';
 
 // Se exporta el esquema ya construido para poder usarlo en:
 //   - pages/api/graphql.ts      (servidor)

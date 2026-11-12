@@ -20,7 +20,7 @@ function AdminContent({ children }: { children: ReactNode }) {
         <p className="mt-1 text-sm text-slate-500">Panel de operaciones</p>
 
         <nav aria-label="Navegación de administración" className="mt-6 flex-1">
-          <ul className="flex gap-2 overflow-x-auto md:flex-col">
+          <ul className="flex gap-2 overflow-x-auto pb-1 md:flex-col md:overflow-visible md:pb-0">
             <li>
               <Link
                 href="/admin"
@@ -49,6 +49,7 @@ function AdminContent({ children }: { children: ReactNode }) {
             </li>
             {[
               { href: '/admin/hoteles', label: 'Hoteles' },
+              { href: '/admin/combos', label: 'Combos' },
               { href: '/admin/metricas', label: 'Métricas' },
             ].map(({ href, label }) => (
               <li key={href}>

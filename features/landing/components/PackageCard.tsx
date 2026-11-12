@@ -1,6 +1,7 @@
 import Image from 'next/image';
 
 export interface FixedPackage {
+  id?: string;
   name: string;
   category: 'Aventura' | 'Europa' | 'Playa' | 'Ciudad';
   destination: string;
@@ -9,6 +10,7 @@ export interface FixedPackage {
   price: string;
   priceNote: string;
   image: string;
+  description?: string;
 }
 
 interface PackageCardProps {
@@ -38,6 +40,11 @@ export function PackageCard({ travelPackage }: PackageCardProps) {
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <p className="text-sm font-medium text-brand-700">{travelPackage.destination}</p>
         <h3 className="mt-1 text-xl font-semibold leading-snug text-slate-950">{travelPackage.name}</h3>
+        {travelPackage.description && (
+          <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">
+            {travelPackage.description}
+          </p>
+        )}
         <div className="mt-4 flex flex-1 flex-wrap content-start gap-x-4 gap-y-1 text-sm text-slate-600">
           <span>{travelPackage.departure}</span>
           <span aria-hidden="true">·</span>

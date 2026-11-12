@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import type { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
@@ -6,6 +7,7 @@ import Layout from '../components/layout/Layout';
 import { signIn } from 'next-auth/react';
 import { useMutation } from '@apollo/client/react';
 import { graphql } from '../gql';
+import { GoogleSignInButton } from '../features/auth/GoogleSignInButton';
 
 const SIGNUP_MUTATION = graphql(`
   mutation SignupUser($name: String, $email: String!, $password: String!) {
@@ -16,7 +18,7 @@ const SIGNUP_MUTATION = graphql(`
   }
 `);
 
-function Signup() {
+function Signup({ googleEnabled }: { googleEnabled: boolean }) {
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -72,6 +74,14 @@ function Signup() {
           <button disabled={loading} className="w-full rounded bg-slate-900 px-4 py-2 font-medium text-white disabled:opacity-60">
             {loading ? 'Creando cuenta…' : 'Crear cuenta'}
           </button>
+          {googleEnabled && (
+            <>
+              <div className="flex items-center gap-3 text-xs uppercase text-gray-400">
+                <span className="h-px flex-1 bg-gray-200" />o<span className="h-px flex-1 bg-gray-200" />
+              </div>
+              <GoogleSignInButton callbackUrl="/" />
+            </>
+          )}
           <p className="text-sm text-gray-600">
             ¿Ya tienes cuenta? <Link href="/login" className="underline">Inicia sesión</Link>
           </p>
@@ -80,5 +90,16 @@ function Signup() {
     </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<{
+  googleEnabled: boolean;
+}> = async () => ({
+  props: {
+    googleEnabled: Boolean(
+      process.env.AUTH_GOOGLE_ID?.trim() &&
+        process.env.AUTH_GOOGLE_SECRET?.trim(),
+    ),
+  },
+});
 
 export default Signup;

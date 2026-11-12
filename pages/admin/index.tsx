@@ -54,15 +54,15 @@ function AdminDashboard() {
         {!loading && !error && bookings.length === 0 && <p className="mt-4">No hay reservas registradas.</p>}
         {bookings.length > 0 && (
           <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <table className="admin-data-table w-full text-left text-sm">
               <thead><tr className="border-b"><th className="p-2">Referencia</th><th className="p-2">Estado</th><th className="p-2">Total</th><th className="p-2">Creada</th></tr></thead>
               <tbody>
                 {bookings.map((booking) => (
                   <tr key={booking.id} className="border-b last:border-0">
-                    <td className="p-2"><Link className="underline" href={`/admin/reservas/${booking.id}`}>{booking.reference}</Link></td>
-                    <td className="p-2">{booking.status}</td>
-                    <td className="p-2">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: booking.currency }).format(Number(booking.totalAmount))}</td>
-                    <td className="p-2">{new Date(booking.createdAt).toLocaleDateString('es-MX')}</td>
+                    <td data-label="Referencia" className="sm:p-2"><Link className="underline" href={`/admin/reservas/${booking.id}`}>{booking.reference}</Link></td>
+                    <td data-label="Estado" className="sm:p-2">{booking.status}</td>
+                    <td data-label="Total" className="sm:p-2">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: booking.currency }).format(Number(booking.totalAmount))}</td>
+                    <td data-label="Creada" className="sm:p-2">{new Date(booking.createdAt).toLocaleDateString('es-MX')}</td>
                   </tr>
                 ))}
               </tbody>

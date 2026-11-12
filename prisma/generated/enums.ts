@@ -49,6 +49,25 @@ export const EventType = {
 export type EventType = (typeof EventType)[keyof typeof EventType]
 
 
+export const PromoPackageCategory = {
+  AVENTURA: 'AVENTURA',
+  EUROPA: 'EUROPA',
+  PLAYA: 'PLAYA',
+  CIUDAD: 'CIUDAD'
+} as const
+
+export type PromoPackageCategory = (typeof PromoPackageCategory)[keyof typeof PromoPackageCategory]
+
+
+export const PromoPackageStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type PromoPackageStatus = (typeof PromoPackageStatus)[keyof typeof PromoPackageStatus]
+
+
 export const PropertyType = {
   HOTEL: 'HOTEL',
   RESORT: 'RESORT',

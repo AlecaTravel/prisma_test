@@ -361,21 +361,21 @@ function AdminHotelsPage() {
           {!loading && !error && hotels.length === 0 && <p className="p-6 text-center text-sm text-slate-600">No hay hoteles para estos filtros.</p>}
           {hotels.length > 0 && (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="admin-data-table w-full text-left text-sm">
                 <thead className="bg-slate-50 text-xs uppercase text-slate-600">
                   <tr><th scope="col" className="px-4 py-3">Hotel</th><th scope="col" className="px-4 py-3">Destino</th><th scope="col" className="px-4 py-3">Categoría</th><th scope="col" className="px-4 py-3">Estado</th><th scope="col" className="px-4 py-3">Acciones</th></tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {hotels.map((hotel) => (
                     <tr key={hotel.id}>
-                      <td className="px-4 py-3">
+                      <td data-label="Hotel" className="sm:px-4 sm:py-3">
                         <p className="font-medium text-slate-900">{hotel.title}</p>
                         <p className="text-xs text-slate-500">/{hotel.slug}</p>
                       </td>
-                      <td className="px-4 py-3">{hotel.destination.name}, {hotel.destination.countryCode}</td>
-                      <td className="px-4 py-3">{hotel.categoryStars} ★</td>
-                      <td className="px-4 py-3">{hotel.status}</td>
-                      <td className="px-4 py-3">
+                      <td data-label="Destino" className="sm:px-4 sm:py-3">{hotel.destination.name}, {hotel.destination.countryCode}</td>
+                      <td data-label="Categoría" className="sm:px-4 sm:py-3">{hotel.categoryStars} ★</td>
+                      <td data-label="Estado" className="sm:px-4 sm:py-3">{hotel.status}</td>
+                      <td data-label="Acciones" className="sm:px-4 sm:py-3">
                         {isAdmin ? (
                           <button type="button" onClick={() => { setUpdateError(''); setSelectedHotel(hotel); }} className="font-medium text-sky-700 hover:underline">
                             Editar
