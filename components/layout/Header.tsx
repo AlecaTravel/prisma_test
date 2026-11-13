@@ -17,6 +17,8 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const showSearchLab =
+    status === 'authenticated' && (user?.role === 'ADMIN' || user?.role === 'AGENT');
 
   const closeMenu = () => setMenuOpen(false);
   const isActive = (pathname: string) => router.pathname === pathname;
@@ -73,9 +75,21 @@ const Header = () => {
       ? 'w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-sky-900 transition hover:bg-sky-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700'
       : 'rounded-full px-3 py-2 text-sm font-medium text-sky-800 transition-colors hover:bg-sky-100 hover:text-sky-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700';
 
+    const searchLabLink = showSearchLab && (
+      <Link
+        href="/search-lab"
+        onClick={compact ? closeMenu : undefined}
+        aria-current={isActive('/search-lab') ? 'page' : undefined}
+        className={linkClass}
+      >
+        Lab de búsqueda
+      </Link>
+    );
+
     if (status === 'authenticated') {
       return (
         <>
+          {searchLabLink}
           {compact && (
             <p className="truncate px-3 pb-2 text-sm font-medium text-sky-700">
               {user?.name ?? user?.email}
@@ -120,6 +134,7 @@ const Header = () => {
     if (status === 'unauthenticated') {
       return (
         <>
+          {searchLabLink}
           <Link
             href="/login"
             onClick={compact ? closeMenu : undefined}

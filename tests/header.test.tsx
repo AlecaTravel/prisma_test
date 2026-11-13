@@ -113,9 +113,51 @@ describe('responsive header navigation', () => {
     const mobileNavigation = within(
       screen.getByRole('navigation', { name: 'Navegación móvil' }),
     );
+    expect(mobileNavigation.getByRole('link', { name: 'Lab de búsqueda' })).toHaveAttribute(
+      'href',
+      '/search-lab',
+    );
     expect(mobileNavigation.getByRole('link', { name: 'Mis reservas' })).toBeInTheDocument();
     expect(mobileNavigation.getByRole('link', { name: 'Administración' })).toBeInTheDocument();
     expect(mobileNavigation.queryByRole('link', { name: /Nuevo hotel/i })).not.toBeInTheDocument();
     expect(mobileNavigation.getByRole('button', { name: 'Cerrar sesión' })).toBeInTheDocument();
+  });
+
+  it('does not show the search lab link to customer accounts', () => {
+    mockedUseMe.mockReturnValue({
+      user: {
+        id: 'customer-1',
+        name: 'Customer',
+        email: 'customer@example.com',
+        role: 'CUSTOMER',
+        image: null,
+      },
+      status: 'authenticated',
+      loading: false,
+      error: undefined,
+    });
+
+    render(<Header />);
+
+    expect(screen.queryByRole('link', { name: 'Lab de búsqueda' })).not.toBeInTheDocument();
+  });
+
+  it('shows the search lab link to agent accounts', () => {
+    mockedUseMe.mockReturnValue({
+      user: {
+        id: 'agent-1',
+        name: 'Travel Agent',
+        email: 'agent@example.com',
+        role: 'AGENT',
+        image: null,
+      },
+      status: 'authenticated',
+      loading: false,
+      error: undefined,
+    });
+
+    render(<Header />);
+
+    expect(screen.getAllByRole('link', { name: 'Lab de búsqueda' })).toHaveLength(2);
   });
 });

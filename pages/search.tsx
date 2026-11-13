@@ -18,6 +18,7 @@ import {
 import { graphql } from '../gql';
 import { getDefaultStayDates, isValidStayDates, type StayDates } from '../lib/stay-dates';
 import Layout from '../components/layout/Layout';
+import { SearchLabLink } from '../features/search-lab/SearchLabLink';
 
 const SEARCH_HOTELS_QUERY = graphql(`
   query SearchHotelsWithFacets(
@@ -276,6 +277,9 @@ function SearchCatalogPage() {
 
       <div className="mx-auto max-w-7xl space-y-6">
         <div>
+          <div className="mb-4 flex justify-end">
+            <SearchLabLink />
+          </div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">
             Inventario Global
           </h1>
@@ -501,6 +505,7 @@ function CatalogComingSoon() {
             viaje disponibles.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <SearchLabLink />
             <Link
               href="/contact"
               className="rounded-full bg-sky-700 px-5 py-3 font-semibold text-white transition hover:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700"
