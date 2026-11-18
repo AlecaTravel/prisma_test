@@ -5,66 +5,12 @@ import Layout from '../../components/layout/Layout';
 import { isValidStayDates, type StayDates } from '../../lib/stay-dates';
 import styles from './SearchExperienceLab.module.css';
 
-type Theme = 'coast' | 'paper' | 'night';
+type Theme = 'cyan' | 'sky' | 'indigo';
 type Composition = 'classic' | 'sidebar' | 'dual';
 type DatePolicy = 'required' | 'flexible';
 type FlowStep = 'search' | 'results' | 'reserve';
 type Dialog = 'dates' | 'preserve' | null;
 type PriceOrder = 'asc' | 'desc';
-type ScenarioId = 'required-dates' | 'flexible-dates' | 'preserve-dates';
-type TestResult = 'yes' | 'no' | 'untested';
-
-type TestCase = {
-  id: string;
-  title: string;
-  instruction: string;
-  expectation: string;
-};
-
-const SCENARIOS: Array<{ id: ScenarioId; title: string; description: string }> = [
-  {
-    id: 'required-dates',
-    title: '1. Fechas obligatorias',
-    description: 'Intenta buscar sin fechas y revisa el mensaje de validación.',
-  },
-  {
-    id: 'flexible-dates',
-    title: '2. Buscar con flexibilidad',
-    description: 'Compara precios sin fechas y selecciona una estancia.',
-  },
-  {
-    id: 'preserve-dates',
-    title: '3. Mantener la estancia',
-    description: 'Cambia el destino y confirma que se ofrezca conservar 3 noches.',
-  },
-];
-
-const TEST_CASES: TestCase[] = [
-  {
-    id: 'required',
-    title: 'Las fechas obligatorias se entienden',
-    instruction: 'Abre «Fechas obligatorias», deja las fechas vacías y pulsa «Buscar estancias».',
-    expectation: 'La búsqueda no avanza y explica qué fechas hacen falta.',
-  },
-  {
-    id: 'flexible',
-    title: 'La búsqueda flexible muestra precios útiles',
-    instruction: 'Abre «Buscar con flexibilidad» y revisa las etiquetas de precio.',
-    expectation: 'Ves el precio menor y el mayor; todavía no se inicia una reserva.',
-  },
-  {
-    id: 'reselect',
-    title: 'Se piden fechas antes de reservar',
-    instruction: 'Sin fechas, pulsa «Elegir fechas» y luego continúa con fechas válidas.',
-    expectation: 'Se abre un selector de fechas antes del resumen de reserva.',
-  },
-  {
-    id: 'preserve',
-    title: 'La siguiente búsqueda ofrece conservar la estancia',
-    instruction: 'Abre «Mantener la estancia», cambia el destino y busca.',
-    expectation: 'El aviso conserva las fechas seleccionadas (3 noches / 4 días).',
-  },
-];
 
 type DemoHotel = {
   id: string;
@@ -135,7 +81,7 @@ function formatDate(value: string): string {
 }
 
 export function SearchExperienceLab() {
-  const [theme, setTheme] = useState<Theme>('coast');
+  const [theme, setTheme] = useState<Theme>('sky');
   const [composition, setComposition] = useState<Composition>('classic');
   const [datePolicy, setDatePolicy] = useState<DatePolicy>('required');
   const [step, setStep] = useState<FlowStep>('results');
@@ -152,9 +98,6 @@ export function SearchExperienceLab() {
   const [selectedHotel, setSelectedHotel] = useState<DemoHotel | null>(null);
   const [modalDates, setModalDates] = useState<StayDates>({ checkIn: '', checkOut: '' });
   const [confirmed, setConfirmed] = useState(false);
-  const [activeScenario, setActiveScenario] = useState<ScenarioId | null>(null);
-  const [testResults, setTestResults] = useState<Record<string, TestResult>>({});
-  const [testNotes, setTestNotes] = useState<Record<string, string>>({});
 
   const nights = nightsBetween(savedDates);
   const hotels = useMemo(() => {
@@ -236,7 +179,7 @@ export function SearchExperienceLab() {
   };
 
   const resetDemo = () => {
-    setTheme('coast');
+    setTheme('sky');
     setComposition('classic');
     setDatePolicy('required');
     setStep('results');
@@ -251,47 +194,10 @@ export function SearchExperienceLab() {
     setPropertyType('all');
     setSelectedHotel(null);
     setConfirmed(false);
-    setActiveScenario(null);
-  };
-
-  const startScenario = (scenario: ScenarioId) => {
-    setActiveScenario(scenario);
-    setDestination('Puerto Vallarta');
-    setActiveDestination('Puerto Vallarta');
-    setDialog(null);
-    setFeedback('');
-    setSelectedHotel(null);
-    setConfirmed(false);
-    setPropertyType('all');
-    setPriceOrder('asc');
-
-    if (scenario === 'required-dates') {
-      setDatePolicy('required');
-      setDates({ checkIn: '', checkOut: '' });
-      setSavedDates(null);
-      setSearched(false);
-      setStep('search');
-      return;
-    }
-
-    if (scenario === 'flexible-dates') {
-      setDatePolicy('flexible');
-      setDates({ checkIn: '', checkOut: '' });
-      setSavedDates(null);
-      setSearched(false);
-      setStep('search');
-      return;
-    }
-
-    setDatePolicy('flexible');
-    setDates(INITIAL_DATES);
-    setSavedDates(INITIAL_DATES);
-    setSearched(true);
-    setStep('results');
   };
 
   const themeClass =
-    theme === 'paper' ? styles.themePaper : theme === 'night' ? styles.themeNight : styles.themeCoast;
+    theme === 'cyan' ? styles.themeCyan : theme === 'indigo' ? styles.themeIndigo : styles.themeSky;
   const workspaceClass =
     composition === 'sidebar'
       ? styles.workspaceSidebar
@@ -308,7 +214,7 @@ export function SearchExperienceLab() {
         <title>Search experience lab | Aleca Travel</title>
         <meta
           name="description"
-          content="Entorno privado para probar estilos, composiciones y flujos de búsqueda y reserva."
+          content="Laboratorio privado para probar paletas, composiciones y flujos de búsqueda y reserva."
         />
       </Head>
       <main className={`${styles.page} ${themeClass}`}>
@@ -325,53 +231,30 @@ export function SearchExperienceLab() {
               <span className={styles.eyebrow}>Search → stay → reserve</span>
               <h1>Encuentra tu próxima estancia.</h1>
               <p>
-                Un espacio de prueba para comparar el tono visual y la fricción del flujo
-                antes de conectarlo al inventario real.
+                Un espacio para probar cambios en equipo y compartir opiniones en vivo, antes
+                de conectarlo al inventario real.
               </p>
             </div>
             <span className={styles.demoPill}>● Solo demo · no crea reservas</span>
           </header>
 
-          <section className={styles.scenarioPanel} aria-labelledby="scenario-title">
-            <div className={styles.sectionHeading}>
-              <div>
-                <span className={styles.eyebrow}>Empieza aquí</span>
-                <h2 id="scenario-title">Elige qué experiencia quieres probar</h2>
-                <p>Un clic prepara el estado inicial. Después puedes cambiar cualquier control.</p>
-              </div>
-            </div>
-            <div className={styles.scenarioGrid}>
-              {SCENARIOS.map((scenario) => (
-                <button
-                  key={scenario.id}
-                  type="button"
-                  className={styles.scenarioButton}
-                  aria-pressed={activeScenario === scenario.id}
-                  onClick={() => startScenario(scenario.id)}
-                >
-                  <strong>{scenario.title}</strong>
-                  <span>{scenario.description}</span>
-                  <span className={styles.scenarioAction}>
-                    {activeScenario === scenario.id ? 'Escenario activo ✓' : 'Probar escenario →'}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </section>
-
           <section className={styles.controlPanel} aria-label="Controles de la experiencia">
             <div className={styles.controlIntro}>
-              <span className={styles.eyebrow}>Controles en vivo</span>
-              <p>Prueba combinaciones sin salir del lab. Las selecciones cambian la vista al instante.</p>
+              <span className={styles.eyebrow}>Sesión de equipo</span>
+              <p>
+                Usa azul para las acciones, cian para destacar y blanco como base. Ajusta la
+                distribución y las fechas, recorre Buscar → Comparar → Reservar y compartan
+                qué cambiarían.
+              </p>
             </div>
             <div className={styles.toolbar}>
               <div className={styles.toolbarGroup}>
-                <span className={styles.controlLabel}>Estilo</span>
-                <div className={styles.segmented} aria-label="Estilo visual">
+                <span className={styles.controlLabel}>Paleta</span>
+                <div className={styles.segmented} aria-label="Paleta de color">
                   {([
-                    ['coast', 'Costa'],
-                    ['paper', 'Editorial'],
-                    ['night', 'Noche'],
+                    ['cyan', 'Cian'],
+                    ['sky', 'Cielo'],
+                    ['indigo', 'Índigo'],
                   ] as const).map(([value, label]) => (
                     <button
                       key={value}
@@ -738,87 +621,6 @@ export function SearchExperienceLab() {
             )}
           </div>
 
-          <section className={styles.testPanel} aria-labelledby="test-plan-title">
-            <div className={styles.testPanelHeader}>
-              <div>
-                <span className={styles.eyebrow}>Tu evaluación</span>
-                <h2 id="test-plan-title">¿La experiencia hizo lo esperado?</h2>
-                <p>Prueba cada recorrido y marca tu respuesta. Las notas se quedan en esta página.</p>
-              </div>
-              <div className={styles.testSummary} aria-live="polite">
-                {Object.values(testResults).filter((result) => result === 'yes').length} sí ·{' '}
-                {Object.values(testResults).filter((result) => result === 'no').length} no ·{' '}
-                {TEST_CASES.length
-                  - Object.values(testResults).filter((result) => result === 'yes' || result === 'no').length}{' '}
-                sin probar
-              </div>
-            </div>
-            <div className={styles.testList}>
-              {TEST_CASES.map((testCase) => {
-                const result = testResults[testCase.id] ?? 'untested';
-                return (
-                  <article key={testCase.id} className={styles.testCase}>
-                    <div className={styles.testCaseCopy}>
-                      <h3>{testCase.title}</h3>
-                      <p><strong>Prueba:</strong> {testCase.instruction}</p>
-                      <p><strong>Debería ocurrir:</strong> {testCase.expectation}</p>
-                    </div>
-                    <div
-                      className={styles.testAnswer}
-                      role="group"
-                      aria-label={`Resultado: ${testCase.title}`}
-                    >
-                      {([
-                        ['yes', 'Sí'],
-                        ['no', 'No'],
-                        ['untested', 'Sin probar'],
-                      ] as const).map(([value, label]) => (
-                        <button
-                          key={value}
-                          type="button"
-                          className={styles.answerButton}
-                          aria-pressed={result === value}
-                          onClick={() =>
-                            setTestResults((current) => ({ ...current, [testCase.id]: value }))
-                          }
-                        >
-                          {label}
-                        </button>
-                      ))}
-                    </div>
-                    <label className={styles.notesLabel}>
-                      Observaciones
-                      <textarea
-                        className={styles.notesInput}
-                        value={testNotes[testCase.id] ?? ''}
-                        onChange={(event) =>
-                          setTestNotes((current) => ({
-                            ...current,
-                            [testCase.id]: event.target.value,
-                          }))
-                        }
-                        placeholder="¿Qué notaste? ¿Qué cambiarías?"
-                        rows={2}
-                      />
-                    </label>
-                  </article>
-                );
-              })}
-            </div>
-            <div className={styles.testPanelFooter}>
-              <span>Evaluación local: al recargar la página, tus respuestas se reinician.</span>
-              <button
-                type="button"
-                className={styles.quietButton}
-                onClick={() => {
-                  setTestResults({});
-                  setTestNotes({});
-                }}
-              >
-                Limpiar respuestas
-              </button>
-            </div>
-          </section>
         </div>
 
         {dialog && (

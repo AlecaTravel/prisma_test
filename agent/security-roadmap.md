@@ -43,7 +43,7 @@ removes them afterward.
 
 ## Phase 4 — Auth & authorization
 - [x] Auth.js / next-auth with Prisma identity and role in the GraphQL context
-- [ ] Complete role and object-level authorization; review booking/quote ownership
+- [ ] Complete role and object-level authorization; review booking/quote ownership                          
       (BOLA is OWASP API #1). No Auth0 migration is required for this work.
 
 ## Phase 5 — Observability

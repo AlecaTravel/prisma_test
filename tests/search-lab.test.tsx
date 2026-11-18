@@ -24,20 +24,23 @@ vi.mock('../components/layout/Layout', () => ({
 describe('search experience lab interactions', () => {
   afterEach(cleanup);
 
-  it('lets a tester switch visual style and page composition', () => {
+  it('lets a tester switch the blue palette and page composition', () => {
     render(<SearchExperienceLab />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Noche' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Cian' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Índigo' }));
     fireEvent.click(screen.getByRole('button', { name: 'Doble' }));
 
-    expect(screen.getByRole('button', { name: 'Noche' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Índigo' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Cian' })).toHaveAttribute('aria-pressed', 'false');
     expect(screen.getByRole('button', { name: 'Doble' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('shows feedback when required dates are missing', () => {
     render(<SearchExperienceLab />);
 
-    fireEvent.click(screen.getByRole('button', { name: /1\. Fechas obligatorias/ }));
+    fireEvent.change(screen.getByLabelText('Llegada'), { target: { value: '' } });
+    fireEvent.change(screen.getByLabelText('Salida'), { target: { value: '' } });
     fireEvent.click(screen.getByRole('button', { name: /Buscar estancias/ }));
 
     expect(screen.getByRole('alert')).toHaveTextContent('elige una fecha de entrada y una de salida');
@@ -46,10 +49,12 @@ describe('search experience lab interactions', () => {
   it('shows price choices without dates and requests dates before reservation', () => {
     render(<SearchExperienceLab />);
 
-    fireEvent.click(screen.getByRole('button', { name: /2\. Buscar con flexibilidad/ }));
-
-    expect(screen.queryByRole('heading', { name: /Estancias en/ })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Flexibles' }));
+    fireEvent.change(screen.getByLabelText('Llegada'), { target: { value: '' } });
+    fireEvent.change(screen.getByLabelText('Salida'), { target: { value: '' } });
     fireEvent.click(screen.getByRole('button', { name: /Buscar estancias/ }));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Buscar sin fechas' }));
     expect(screen.getByText('Menor precio')).toBeInTheDocument();
     expect(screen.getByText('Mayor precio')).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('button', { name: 'Elegir fechas' })[0]);
@@ -72,7 +77,6 @@ describe('search experience lab interactions', () => {
   it('shows a preserve-dates prompt before searching another destination', () => {
     render(<SearchExperienceLab />);
 
-    fireEvent.click(screen.getByRole('button', { name: /3\. Mantener la estancia/ }));
     fireEvent.change(screen.getByLabelText('Destino o alojamiento'), {
       target: { value: 'Cancún' },
     });
@@ -87,22 +91,12 @@ describe('search experience lab interactions', () => {
     expect(screen.getByText(/1 may — 4 may · 3 noches/)).toBeInTheDocument();
   });
 
-  it('records a tester answer and observation', () => {
+  it('removes the answer form so the team can review the demo live', () => {
     render(<SearchExperienceLab />);
 
-    const resultGroup = screen.getByRole('group', {
-      name: 'Resultado: Las fechas obligatorias se entienden',
-    });
-    const testCase = resultGroup.closest('article');
-    if (!testCase) throw new Error('Expected the result group to be inside its test case');
-    fireEvent.click(within(resultGroup).getByRole('button', { name: 'No' }));
-    fireEvent.change(within(testCase).getByLabelText('Observaciones'), {
-      target: { value: 'El mensaje no fue claro.' },
-    });
-
-    expect(resultGroup).toHaveAttribute('aria-label', 'Resultado: Las fechas obligatorias se entienden');
-    expect(screen.getByText(/1 no/)).toBeInTheDocument();
-    expect(screen.getByDisplayValue('El mensaje no fue claro.')).toBeInTheDocument();
+    expect(screen.getByText('Sesión de equipo')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Observaciones')).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: /Resultado:/ })).not.toBeInTheDocument();
   });
 });
 
